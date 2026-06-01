@@ -1,0 +1,2499 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postly AI — PRD v4.0 · Final</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Instrument+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0D0D10;
+            --ink2: #18181E;
+            --ink3: #222229;
+            --line: #2E2E38;
+            --line2: #3D3D4A;
+            --body: #E2E0EC;
+            --muted: #7A7888;
+            --muted2: #A09EB8;
+            --cream: #F5F0E8;
+            --orange: #E8622A;
+            --orange-d: #A8411A;
+            --orange-bg: rgba(232, 98, 42, 0.08);
+            --green: #2D9E72;
+            --green-bg: rgba(45, 158, 114, 0.08);
+            --red: #C94040;
+            --red-bg: rgba(201, 64, 64, 0.08);
+            --amber: #C48828;
+            --amber-bg: rgba(196, 136, 40, 0.08);
+            --page: 920px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Instrument Sans', sans-serif;
+            background: var(--ink);
+            color: var(--body);
+            font-size: 15px;
+            line-height: 1.78;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            height: 52px;
+            background: rgba(13, 13, 16, 0.95);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: 1.1rem;
+            color: var(--body);
+            letter-spacing: -0.03em;
+        }
+
+        .nav-logo em {
+            font-style: italic;
+            color: var(--orange);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.25rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 0.7rem;
+            text-decoration: none;
+            color: var(--muted);
+            font-weight: 500;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            transition: color 0.15s;
+        }
+
+        .nav-links a:hover {
+            color: var(--orange);
+        }
+
+        .nav-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--muted);
+            border: 1px solid var(--line2);
+            padding: 3px 10px;
+            border-radius: 2px;
+            letter-spacing: 0.05em;
+        }
+
+        /* ─── LAYOUT ─── */
+        .page {
+            max-width: var(--page);
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        main {
+            padding-top: 52px;
+        }
+
+        /* ─── COVER ─── */
+        .cover {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 5rem 0 4.5rem;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .cover-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--line) 1px, transparent 1px);
+            background-size: 80px 80px;
+            opacity: 0.25;
+            pointer-events: none;
+        }
+
+        .cover-glow {
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(232, 98, 42, 0.1) 0%, transparent 65%);
+            left: -200px;
+            bottom: -200px;
+            pointer-events: none;
+        }
+
+        .cover-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--orange);
+            border: 1px solid rgba(232, 98, 42, 0.3);
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 2px;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cover h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .cover h1 em {
+            font-style: italic;
+            color: var(--orange);
+        }
+
+        .cover-pitch {
+            font-size: 1.05rem;
+            color: var(--muted2);
+            font-weight: 300;
+            max-width: 560px;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+            line-height: 1.6;
+        }
+
+        .cover-hook {
+            border-left: 3px solid var(--orange);
+            padding: 1rem 1.5rem;
+            background: var(--orange-bg);
+            max-width: 640px;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cover-hook p {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--cream);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .cover-meta {
+            display: flex;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+            padding-top: 2rem;
+            border-top: 1px solid var(--line);
+            position: relative;
+            z-index: 1;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .meta-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+        }
+
+        .meta-val {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--muted2);
+        }
+
+        .meta-val.hi {
+            color: var(--orange);
+        }
+
+        /* ─── SECTION ─── */
+        .section {
+            padding: 5rem 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .s-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--orange);
+            border: 1px solid rgba(232, 98, 42, 0.25);
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 2px;
+            margin-bottom: 0.9rem;
+        }
+
+        h2.s-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.3rem;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 0.95;
+            margin-bottom: 0.5rem;
+        }
+
+        .s-lead {
+            font-size: 0.92rem;
+            color: var(--muted2);
+            max-width: 580px;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .s-rule {
+            height: 1px;
+            background: linear-gradient(90deg, var(--orange-d), transparent);
+            margin-bottom: 2.5rem;
+        }
+
+        h3.sub {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--orange);
+            margin: 2.5rem 0 0.7rem;
+            letter-spacing: -0.02em;
+        }
+
+        h4.minor {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--muted2);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin: 1.75rem 0 0.6rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        p.dim {
+            color: var(--muted2);
+            font-size: 0.9rem;
+        }
+
+        /* ─── CALLOUT BOXES ─── */
+        .box {
+            border-radius: 3px;
+            padding: 1.1rem 1.4rem;
+            margin: 1.5rem 0;
+            border-left: 3px solid;
+        }
+
+        .box.orange {
+            background: var(--orange-bg);
+            border-color: var(--orange);
+        }
+
+        .box.green {
+            background: var(--green-bg);
+            border-color: var(--green);
+        }
+
+        .box.red {
+            background: var(--red-bg);
+            border-color: var(--red);
+        }
+
+        .box.amber {
+            background: var(--amber-bg);
+            border-color: var(--amber);
+        }
+
+        .box-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.4rem;
+        }
+
+        .box.orange .box-title {
+            color: var(--orange);
+        }
+
+        .box.green .box-title {
+            color: var(--green);
+        }
+
+        .box.red .box-title {
+            color: var(--red);
+        }
+
+        .box.amber .box-title {
+            color: var(--amber);
+        }
+
+        .box p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: var(--muted2);
+        }
+
+        /* ─── DEAD BOX (crossed-out) ─── */
+        .dead-box {
+            background: var(--ink2);
+            border: 1px solid var(--line2);
+            border-radius: 3px;
+            padding: 1.1rem 1.4rem;
+            margin: 1.5rem 0;
+            opacity: 0.7;
+            position: relative;
+        }
+
+        .dead-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(-45deg, transparent, transparent 8px,
+                    rgba(201, 64, 64, 0.05) 8px, rgba(201, 64, 64, 0.05) 9px);
+            border-radius: 3px;
+            pointer-events: none;
+        }
+
+        .dead-box-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--red);
+            margin-bottom: 0.4rem;
+            text-decoration: line-through;
+        }
+
+        .dead-box p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        /* ─── TABLES ─── */
+        .tbl-wrap {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid var(--line);
+            border-radius: 3px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        thead tr {
+            background: var(--ink3);
+            border-top: 2px solid var(--orange);
+        }
+
+        thead th {
+            padding: 10px 14px;
+            text-align: left;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--muted2);
+            font-weight: 500;
+        }
+
+        tbody tr:nth-child(even) {
+            background: var(--ink2);
+        }
+
+        tbody tr:nth-child(odd) {
+            background: var(--ink);
+        }
+
+        tbody td {
+            padding: 9px 14px;
+            color: var(--body);
+            vertical-align: top;
+            border-bottom: 1px solid var(--line);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        td.k {
+            font-weight: 600;
+            color: var(--muted2);
+            white-space: nowrap;
+        }
+
+        td.ok {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        td.bad {
+            color: var(--red);
+        }
+
+        td.hi {
+            color: var(--orange);
+            font-weight: 600;
+        }
+
+        td.st {
+            text-decoration: line-through;
+            color: var(--muted);
+        }
+
+        .badge {
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 2px 8px;
+            border-radius: 2px;
+            white-space: nowrap;
+        }
+
+        .badge.go {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .badge.cut {
+            background: var(--red);
+            color: #fff;
+        }
+
+        .badge.wait {
+            background: var(--line2);
+            color: var(--muted2);
+        }
+
+        /* ─── FEATURE BLOCKS ─── */
+        .f-block {
+            border: 1px solid var(--line);
+            border-radius: 3px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .f-block.core {
+            border-color: var(--orange-d);
+        }
+
+        .f-head {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 0.75rem 1.2rem;
+            background: var(--ink3);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .f-block.core .f-head {
+            background: var(--orange-bg);
+            border-bottom-color: var(--orange-d);
+        }
+
+        .f-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: var(--line2);
+            color: var(--muted2);
+            padding: 2px 8px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .f-block.core .f-id {
+            background: var(--orange);
+            color: #000;
+            font-weight: 700;
+        }
+
+        .f-name {
+            font-weight: 700;
+            font-size: 0.92rem;
+            flex: 1;
+        }
+
+        .f-est {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .f-body {
+            padding: 1rem 1.2rem;
+        }
+
+        .f-story {
+            font-style: italic;
+            color: var(--muted);
+            font-size: 0.86rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .f-list {
+            list-style: none;
+        }
+
+        .f-list li {
+            font-size: 0.86rem;
+            padding: 3px 0 3px 1.3rem;
+            position: relative;
+            color: var(--muted2);
+        }
+
+        .f-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--orange-d);
+        }
+
+        /* ─── PRICING ─── */
+        .pricing {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            border: 1px solid var(--line);
+            border-radius: 3px;
+            overflow: hidden;
+            background: var(--line);
+            margin: 1.5rem 0;
+        }
+
+        .plan {
+            background: var(--ink2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .plan.star {
+            background: var(--ink3);
+        }
+
+        .p-head {
+            padding: 1.2rem;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .plan.star .p-head {
+            border-bottom-color: var(--orange-d);
+        }
+
+        .p-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .plan.star .p-tag {
+            color: var(--orange);
+        }
+
+        .p-price {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .plan.star .p-price {
+            color: var(--orange);
+        }
+
+        .p-cycle {
+            font-size: 0.76rem;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .p-feats {
+            padding: 1rem 1.2rem;
+            flex: 1;
+        }
+
+        .p-feat {
+            font-size: 0.82rem;
+            padding: 4px 0;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            color: var(--muted2);
+        }
+
+        .p-feat:last-child {
+            border-bottom: none;
+        }
+
+        .p-feat::before {
+            content: '—';
+            color: var(--line2);
+            flex-shrink: 0;
+            font-size: 0.75rem;
+            margin-top: 2px;
+        }
+
+        .plan.star .p-feat::before {
+            content: '✓';
+            color: var(--orange);
+            font-weight: 700;
+        }
+
+        /* ─── COMPARISON ─── */
+        .comp {
+            border: 1px solid var(--line);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+
+        .comp-head {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--ink3);
+            border-top: 2px solid var(--orange);
+        }
+
+        .comp-head div {
+            padding: 9px 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--muted2);
+            text-align: center;
+        }
+
+        .comp-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .comp-cell {
+            padding: 9px 14px;
+            font-size: 0.86rem;
+            text-align: center;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .comp-cell.bad {
+            color: var(--red);
+            background: var(--red-bg);
+        }
+
+        .comp-cell.good {
+            color: var(--green);
+            background: var(--green-bg);
+            font-weight: 600;
+        }
+
+        /* ─── TIMELINE ─── */
+        .tl {
+            margin: 1.5rem 0;
+        }
+
+        .tl-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 1fr;
+            gap: 1rem;
+            padding: 0.9rem 0;
+            border-bottom: 1px solid var(--line);
+            align-items: start;
+        }
+
+        .tl-row:first-child {
+            border-top: 1px solid var(--line);
+        }
+
+        .tl-week {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--orange);
+        }
+
+        .tl-build {
+            font-size: 0.86rem;
+        }
+
+        .tl-goal {
+            font-size: 0.86rem;
+            color: var(--green);
+            font-style: italic;
+        }
+
+        /* ─── TOC ─── */
+        .toc {
+            background: var(--ink2);
+            border: 1px solid var(--line);
+            border-top: 2px solid var(--orange);
+            border-radius: 3px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .toc-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: 1.05rem;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        .toc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.15rem 2rem;
+            list-style: none;
+        }
+
+        .toc-grid li a {
+            display: flex;
+            gap: 0.7rem;
+            align-items: baseline;
+            color: var(--muted2);
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 4px 0;
+            transition: color 0.15s;
+        }
+
+        .toc-grid li a:hover {
+            color: var(--orange);
+        }
+
+        .toc-n {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+
+        /* ─── SIGNAL BOXES ─── */
+        .sig-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .sig-box {
+            border-radius: 3px;
+            padding: 1.1rem;
+            border: 1px solid;
+            border-top-width: 2px;
+        }
+
+        .sig-box.green {
+            background: var(--green-bg);
+            border-color: var(--green);
+        }
+
+        .sig-box.red {
+            background: var(--red-bg);
+            border-color: var(--red);
+        }
+
+        .sig-title {
+            font-weight: 700;
+            font-size: 0.84rem;
+            margin-bottom: 0.65rem;
+        }
+
+        .sig-box.green .sig-title {
+            color: var(--green);
+        }
+
+        .sig-box.red .sig-title {
+            color: var(--red);
+        }
+
+        .sig-list {
+            list-style: none;
+        }
+
+        .sig-list li {
+            font-size: 0.82rem;
+            padding: 3px 0 3px 1.3rem;
+            position: relative;
+            color: var(--muted2);
+        }
+
+        .sig-list li::before {
+            position: absolute;
+            left: 0;
+        }
+
+        .sig-box.green .sig-list li::before {
+            content: '✓';
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        .sig-box.red .sig-list li::before {
+            content: '✗';
+            color: var(--red);
+            font-weight: 700;
+        }
+
+        /* ─── STYLED LIST ─── */
+        ul.sl {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        ul.sl li {
+            padding: 4px 0 4px 1.3rem;
+            position: relative;
+            font-size: 0.88rem;
+            color: var(--muted2);
+        }
+
+        ul.sl li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--orange-d);
+        }
+
+        /* ─── WORKFLOW DIAGRAM ─── */
+        .flow {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin: 1.5rem 0;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            border: 1px solid var(--line);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .flow-step {
+            flex: 1;
+            padding: 1rem 0.9rem;
+            text-align: center;
+            border-right: 1px solid var(--line);
+            background: var(--ink2);
+            min-width: 110px;
+            transition: background 0.15s;
+        }
+
+        .flow-step:last-child {
+            border-right: none;
+        }
+
+        .flow-step:hover {
+            background: var(--ink3);
+        }
+
+        .flow-step.hi {
+            background: var(--orange-bg);
+            border-right-color: var(--orange-d);
+        }
+
+        .flow-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--orange);
+            margin-bottom: 0.3rem;
+        }
+
+        .flow-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--body);
+            line-height: 1.3;
+        }
+
+        .flow-desc {
+            font-size: 0.72rem;
+            color: var(--muted);
+            margin-top: 0.2rem;
+        }
+
+        /* ─── CODE ─── */
+        pre {
+            background: var(--ink2);
+            border: 1px solid var(--line);
+            border-top: 2px solid var(--orange-d);
+            border-radius: 3px;
+            padding: 1.2rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.77rem;
+            color: #B5B0CF;
+            line-height: 1.8;
+        }
+
+        .code-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: var(--orange);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        /* ─── CLOSING ─── */
+        .closing {
+            background: var(--ink2);
+            border-top: 1px solid var(--line);
+            padding: 6rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .closing::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 100%, rgba(232, 98, 42, 0.07) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .closing h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            margin-bottom: 0.75rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .closing h2 em {
+            font-style: italic;
+            color: var(--orange);
+        }
+
+        .closing p {
+            color: var(--muted2);
+            max-width: 440px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .closing-rule {
+            height: 1px;
+            background: var(--line);
+            max-width: 280px;
+            margin: 2rem auto;
+        }
+
+        .closing-url {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--orange);
+            position: relative;
+            z-index: 1;
+        }
+
+        .closing-sub {
+            color: var(--muted);
+            font-size: 0.8rem;
+            margin-top: 0.4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            background: var(--ink);
+            border-top: 1px solid var(--line);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--muted);
+        }
+
+        /* ─── DECISION TABLE ─── */
+        .decision-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 2fr;
+            gap: 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .decision-row:first-child {
+            border-top: 1px solid var(--line);
+            background: var(--ink3);
+        }
+
+        .decision-cell {
+            padding: 10px 14px;
+            font-size: 0.84rem;
+            color: var(--muted2);
+            border-right: 1px solid var(--line);
+        }
+
+        .decision-cell:last-child {
+            border-right: none;
+        }
+
+        .decision-row:first-child .decision-cell {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--muted);
+        }
+
+        .decision-cell.keep {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .decision-cell.cut {
+            color: var(--red);
+        }
+
+        .decision-cell.wait {
+            color: var(--amber);
+        }
+
+        /* ─── ONBOARDING FLOW ─── */
+        .onboard {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            border: 1px solid var(--line);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+
+        .ob-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 0.9rem 1.2rem;
+            border-bottom: 1px solid var(--line);
+            background: var(--ink2);
+        }
+
+        .ob-step:last-child {
+            border-bottom: none;
+        }
+
+        .ob-step.hi {
+            background: var(--orange-bg);
+        }
+
+        .ob-n {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: var(--line2);
+            line-height: 1;
+            flex-shrink: 0;
+            width: 32px;
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        .ob-step.hi .ob-n {
+            color: var(--orange);
+        }
+
+        .ob-text {
+            flex: 1;
+        }
+
+        .ob-label {
+            font-weight: 700;
+            font-size: 0.88rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .ob-desc {
+            font-size: 0.82rem;
+            color: var(--muted2);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        @media (max-width:700px) {
+            .toc-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing {
+                grid-template-columns: 1fr;
+            }
+
+            .sig-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tl-row {
+                grid-template-columns: 1fr;
+            }
+
+            .flow {
+                flex-direction: column;
+            }
+
+            .flow-step {
+                border-right: none;
+                border-bottom: 1px solid var(--line);
+                width: 100%;
+            }
+
+            nav .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-logo">Postly<em>AI</em></div>
+        <ul class="nav-links">
+            <li><a href="#why">Why v4</a></li>
+            <li><a href="#competitor">Competitors</a></li>
+            <li><a href="#product">Product</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#tech">Tech</a></li>
+            <li><a href="#business">Business</a></li>
+            <li><a href="#gtm">GTM</a></li>
+            <li><a href="#timeline">Timeline</a></li>
+            <li><a href="#metrics">Metrics</a></li>
+        </ul>
+        <div class="nav-pill">PRD v4.0 · Final</div>
+    </nav>
+
+    <section class="cover">
+        <div class="cover-grid"></div>
+        <div class="cover-glow"></div>
+        <div class="page">
+            <div class="cover-num">Final version — stop editing, start building</div>
+            <h1>Postly<em> AI</em></h1>
+            <p class="cover-pitch">Product Requirements Document — Your AI Marketing Assistant for Nigerian Businesses
+            </p>
+            <div class="cover-hook">
+                <p>"Postly AI tells you what to do this week, writes it for you, and makes sure you actually do it."</p>
+            </div>
+            <div class="cover-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Version</span>
+                    <span class="meta-val">4.0 — Final</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Date</span>
+                    <span class="meta-val">June 2025</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Core product</span>
+                    <span class="meta-val hi">Weekly Marketing Plan</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">MVP features</span>
+                    <span class="meta-val">4 — nothing more</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Build time</span>
+                    <span class="meta-val">7–10 days to show users · 5 weeks to full launch</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Built by</span>
+                    <span class="meta-val">Taiwo Adeyemo · postlyai.com</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <div class="page" style="padding-top:4rem; padding-bottom:2rem;">
+
+            <!-- TOC -->
+            <div class="toc">
+                <div class="toc-title">Table of Contents</div>
+                <ul class="toc-grid">
+                    <li><a href="#why"><span class="toc-n">01</span> Why v4 Exists — Every Remaining Problem</a></li>
+                    <li><a href="#competitor"><span class="toc-n">02</span> The Real Competitive Threat</a></li>
+                    <li><a href="#product"><span class="toc-n">03</span> The Corrected Product</a></li>
+                    <li><a href="#features"><span class="toc-n">04</span> MVP Feature Set — Final</a></li>
+                    <li><a href="#onboard"><span class="toc-n">05</span> Onboarding — Value Before Friction</a></li>
+                    <li><a href="#tech"><span class="toc-n">06</span> Technical Architecture</a></li>
+                    <li><a href="#business"><span class="toc-n">07</span> Business Model — Honest</a></li>
+                    <li><a href="#gtm"><span class="toc-n">08</span> Go-to-Market</a></li>
+                    <li><a href="#timeline"><span class="toc-n">09</span> Build Timeline</a></li>
+                    <li><a href="#metrics"><span class="toc-n">10</span> Success Metrics</a></li>
+                </ul>
+            </div>
+
+            <!-- 01 WHY V4 -->
+            <section class="section" id="why">
+                <div class="s-num">Section 01</div>
+                <h2 class="s-title">Why v4 Exists</h2>
+                <div class="s-rule"></div>
+                <p class="dim">v3 fixed the biggest structural problems. These are the remaining ones. All small. All
+                    important.</p>
+
+                <div class="dead-box">
+                    <div class="dead-box-title">Still wrong: calling it a "Content Calendar"</div>
+                    <p>A content calendar sounds like: Monday post this, Tuesday post that. Business owners don't care
+                        about content. They care about selling. The product is now called a <strong
+                            style="color:var(--body)">Weekly Marketing Plan</strong> throughout. That framing shifts the
+                        product from a posting tool to a marketing assistant — harder to replace with free AI.</p>
+                </div>
+
+                <div class="dead-box">
+                    <div class="dead-box-title">Still wrong: the calendar generates generic ideas</div>
+                    <p>"Tuesday: Customer testimonial." This is not valuable enough. After two weeks it feels
+                        repetitive. The AI must generate specific, actionable, business-context-aware ideas — not
+                        generic marketing themes. See Section 04 for how this is fixed with a monthly goal and business
+                        context engine.</p>
+                </div>
+
+                <div class="dead-box">
+                    <div class="dead-box-title">Still wrong: requiring signup before showing value</div>
+                    <p>Current flow: landing page → signup → profile → then value. That's too much friction for a
+                        business owner who hasn't yet trusted you. New flow: landing page → "What do you sell?" → see a
+                        sample week instantly → then signup. Value before commitment.</p>
+                </div>
+
+                <div class="dead-box">
+                    <div class="dead-box-title">Still wrong: ₦5,000 may be too high for an unknown product</div>
+                    <p>Not because ₦5,000 is expensive — it's 3% of what a good SMM charges. But unknown products don't
+                        get trusted easily. Test ₦2,500 beta and ₦3,500 early adopter pricing first. Increase once you
+                        have testimonials and case studies.</p>
+                </div>
+
+                <div class="dead-box">
+                    <div class="dead-box-title">Still wrong: "Nigerian context" is a promise you must actually keep
+                    </div>
+                    <p>Claiming "understands Nigerian culture, slang, seasons" sounds good until a user tests it and
+                        gets generic output. This must be hardcoded into the prompt: Eid, Sallah, Christmas,
+                        back-to-school, payday week, owambe season, Valentine campaigns. If you claim it, build it.</p>
+                </div>
+
+                <div class="box orange">
+                    <div class="box-title">What this version fixes</div>
+                    <p>"Content Calendar" → "Weekly Marketing Plan" throughout. Generic calendar ideas →
+                        business-goal-driven specific campaigns. Signup-first → value-first. Conservative launch
+                        pricing. Nigerian context built into prompts, not just claimed.</p>
+                </div>
+            </section>
+
+            <!-- 02 COMPETITOR -->
+            <section class="section" id="competitor">
+                <div class="s-num">Section 02</div>
+                <h2 class="s-title">The Real Competitive Threat</h2>
+                <div class="s-rule"></div>
+
+                <p>The question every potential customer will ask:</p>
+                <div class="box orange">
+                    <div class="box-title">The question you must answer before anything else</div>
+                    <p>"Why should I pay ₦5,000/month when I can open ChatGPT and type: <em>write me an Instagram
+                            caption for my new lace material</em>? For free. Every day."</p>
+                </div>
+
+                <p>This is not answered by having more features. It's answered by being a different category of product.
+                </p>
+
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Competitor</th>
+                                <th>What they offer</th>
+                                <th>What they cannot do</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="k">ChatGPT (free)</td>
+                                <td>Writes any caption instantly</td>
+                                <td>No memory of your business. No plan. You must remember to ask and know what to ask.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="k">Meta AI in WhatsApp</td>
+                                <td>Built in, free, growing fast</td>
+                                <td>No business profile, no weekly plan, no Nigerian seasonal context, no habit
+                                    formation.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Claude / Gemini</td>
+                                <td>Free, high quality writing</td>
+                                <td>Same: no structure, no system, no reason to come back tomorrow.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Social media manager</td>
+                                <td>Human judgement, full service</td>
+                                <td>Costs ₦50k–₦150k/month. Most SMEs can't afford it. Postly is 10–30× cheaper.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="sub">What Postly sells that free AI cannot</h3>
+                <p>Free AI writes content when you remember to ask. Postly gives you a plan every Monday, tells you what
+                    to do today, and becomes the habit of opening the app. You're not selling text. You're selling the
+                    discipline and structure that most business owners don't have time to build themselves.</p>
+
+                <div class="comp">
+                    <div class="comp-head">
+                        <div>Caption generator (old pitch)</div>
+                        <div>Marketing assistant (new pitch)</div>
+                    </div>
+                    <div class="comp-row">
+                        <div class="comp-cell bad">Feature. Easy to replace with free AI.</div>
+                        <div class="comp-cell good">System. Structure you keep coming back to.</div>
+                    </div>
+                    <div class="comp-row">
+                        <div class="comp-cell bad">User asks when they remember</div>
+                        <div class="comp-cell good">App tells user what to do every Monday</div>
+                    </div>
+                    <div class="comp-row">
+                        <div class="comp-cell bad">Same output as ChatGPT prompt</div>
+                        <div class="comp-cell good">Specific to this business, this week, this goal</div>
+                    </div>
+                    <div class="comp-row">
+                        <div class="comp-cell bad">Compared to free tools</div>
+                        <div class="comp-cell good">Compared to hiring a ₦100k/month marketer</div>
+                    </div>
+                    <div class="comp-row">
+                        <div class="comp-cell bad">No reason to return after bulk generation</div>
+                        <div class="comp-cell good">New week = new plan = new reason to open app</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 03 PRODUCT -->
+            <section class="section" id="product">
+                <div class="s-num">Section 03</div>
+                <h2 class="s-title">The Corrected Product</h2>
+                <div class="s-rule"></div>
+
+                <h3 class="sub">3.1 What changed from v3</h3>
+
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Element</th>
+                                <th>v3</th>
+                                <th>v4 (Final)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="k">Product name</td>
+                                <td class="st">Content Calendar</td>
+                                <td class="hi">Weekly Marketing Plan</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Calendar ideas</td>
+                                <td class="st">Generic: "Customer testimonial"</td>
+                                <td class="ok">Specific: "Post side-by-side of your Swiss vs dry lace and ask followers
+                                    which for a wedding"</td>
+                            </tr>
+                            <tr>
+                                <td class="k">First user experience</td>
+                                <td class="st">Signup → profile → calendar</td>
+                                <td class="ok">Landing → "What do you sell?" → sample week → signup</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Business goal</td>
+                                <td class="st">Not collected</td>
+                                <td class="ok">Collected during onboarding: drives everything the AI plans</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Launch price</td>
+                                <td class="st">₦5,000/month immediately</td>
+                                <td class="ok">₦2,500 beta → ₦3,500 early adopter → ₦5,000 standard</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Nigerian context</td>
+                                <td class="st">Claimed in system prompt</td>
+                                <td class="ok">Hardcoded: specific Nigerian campaigns per season</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="sub">3.2 The core loop — this must work perfectly</h3>
+
+                <div class="flow">
+                    <div class="flow-step hi">
+                        <div class="flow-num">Mon</div>
+                        <div class="flow-label">Open app</div>
+                        <div class="flow-desc">See this week's plan</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-num">Step 1</div>
+                        <div class="flow-label">Tap today's idea</div>
+                        <div class="flow-desc">Pre-filled, specific</div>
+                    </div>
+                    <div class="flow-step hi">
+                        <div class="flow-num">Step 2</div>
+                        <div class="flow-label">Hit "Write it"</div>
+                        <div class="flow-desc">AI generates all three</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-num">Step 3</div>
+                        <div class="flow-label">Copy &amp; post</div>
+                        <div class="flow-desc">Instagram + WhatsApp</div>
+                    </div>
+                    <div class="flow-step hi">
+                        <div class="flow-num">Step 4</div>
+                        <div class="flow-label">Mark ✓ done</div>
+                        <div class="flow-desc">Come back tomorrow</div>
+                    </div>
+                </div>
+
+                <div class="box orange">
+                    <div class="box-title">The insight behind the loop</div>
+                    <p>Business owners don't want content. They want someone to tell them what to do. The value is not
+                        "here's a caption." It's "today post this, tomorrow post that, Friday run this offer." That's
+                        the difference between a caption generator (replaceable) and a marketing assistant (not
+                        replaceable).</p>
+                </div>
+
+                <h3 class="sub">3.3 What makes the plan not generic</h3>
+                <p>The plan must be specific enough that users cannot get the same output by typing into ChatGPT. This
+                    comes from combining four inputs:</p>
+
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Input</th>
+                                <th>What it produces</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="k">Business profile</td>
+                                <td>Industry-specific content ideas</td>
+                                <td>Fashion seller gets lace content ideas, not logistics ones</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Monthly goal</td>
+                                <td>Goal-oriented campaigns</td>
+                                <td>"Launch new collection" → teaser + reveal + sale week structure</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Current week context</td>
+                                <td>Seasonal and timely relevance</td>
+                                <td>Sallah week → festive offer posts; payday week → "treat yourself" campaigns</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Previous activity</td>
+                                <td>Avoiding repetition</td>
+                                <td>Won't suggest "customer testimonial" every week if it was done last week</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 04 FEATURES -->
+            <section class="section" id="features">
+                <div class="s-num">Section 04</div>
+                <h2 class="s-title">MVP Feature Set — Final</h2>
+                <div class="s-rule"></div>
+                <p class="dim">Four features. Nothing else until you have 10+ paying customers telling you what to add
+                    next.</p>
+
+                <!-- F-01 -->
+                <div class="f-block core">
+                    <div class="f-head">
+                        <span class="f-id">F-01</span>
+                        <span class="f-name">Business Profile + Goal Setup</span>
+                        <span class="badge go">MVP Core</span>
+                        <span class="f-est">1–2 days</span>
+                    </div>
+                    <div class="f-body">
+                        <p class="f-story">"I describe my business once and set my goal for this month. The app
+                            remembers everything."</p>
+                        <ul class="f-list">
+                            <li>Email/password signup via Supabase Auth</li>
+                            <li>Business profile: name, industry, what they sell, target customer, tone</li>
+                            <li>Monthly goal (new in v4): Get more enquiries / Increase sales / Grow followers / Launch
+                                product / Retain customers</li>
+                            <li>Profile saved to Supabase; injected into every AI prompt as context</li>
+                            <li>Editable from settings at any time — goal should update monthly</li>
+                        </ul>
+                        <div class="box orange" style="margin-top:0.75rem;">
+                            <div class="box-title">Why the monthly goal matters</div>
+                            <p>Without a goal, the AI plans generic content. With "product launch" as a goal, it plans
+                                teaser posts → reveal → urgency → follow-up. The goal turns a content plan into a
+                                marketing campaign.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- F-02 -->
+                <div class="f-block core">
+                    <div class="f-head">
+                        <span class="f-id">F-02</span>
+                        <span class="f-name">Weekly Marketing Plan — The Product</span>
+                        <span class="badge go">MVP Core</span>
+                        <span class="f-est">3 days</span>
+                    </div>
+                    <div class="f-body">
+                        <p class="f-story">"Every Monday I see exactly what to post each day this week — not just
+                            themes, actual specific ideas for my business."</p>
+                        <ul class="f-list">
+                            <li>Home screen — the first thing after login, every session</li>
+                            <li>7-day card list: each card shows Day / Platform / Specific idea / Post type (Promo,
+                                Story, Engagement, Campaign)</li>
+                            <li>Ideas are specific to industry + current week + monthly goal + Nigerian calendar context
+                            </li>
+                            <li>Nigerian seasons hardcoded in prompts: Eid/Sallah, Christmas, back-to-school,
+                                Valentine's, payday week (25th–5th), owambe season (Dec–Jan), Black Friday (Nov)</li>
+                            <li>Auto-regenerates every Monday; also has "Regenerate week" button</li>
+                            <li>Completed days show ✓ (marked manually by user)</li>
+                            <li>Saved in Supabase calendars table with week_start key</li>
+                        </ul>
+                        <div class="box green" style="margin-top:0.75rem;">
+                            <div class="box-title">Specific vs generic — the difference that drives retention</div>
+                            <p>Generic (bad): "Tuesday: Customer testimonial." — Same every week. User stops opening.
+                                Specific (good): "Tuesday: Post the DM from your customer who wore your lace to a
+                                wedding and ask followers to share theirs." — User comes back because this is valuable
+                                enough to act on.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- F-03 -->
+                <div class="f-block core">
+                    <div class="f-head">
+                        <span class="f-id">F-03</span>
+                        <span class="f-name">One-Tap Content Generation</span>
+                        <span class="badge go">MVP Core</span>
+                        <span class="f-est">3–4 days</span>
+                    </div>
+                    <div class="f-body">
+                        <p class="f-story">"I tap Monday's idea and get an Instagram caption, WhatsApp message, and 12
+                            hashtags — all in one go."</p>
+                        <ul class="f-list">
+                            <li>Tap any day in the plan → generation panel opens, pre-filled with that day's specific
+                                idea</li>
+                            <li>Single "Write it" button — no platform picker, no extra steps</li>
+                            <li>One streamed AI response with three clearly labelled sections: INSTAGRAM CAPTION →
+                                WHATSAPP VERSION → HASHTAGS</li>
+                            <li>Copy button per section + "Copy all" button</li>
+                            <li>Optional "Add detail" field: price, offer deadline, location</li>
+                            <li>Tone switcher: regenerate in different tone without re-entering input</li>
+                            <li>Caption rewriter: paste existing caption → AI improves it</li>
+                            <li>Generation auto-saved and linked to that day's plan item</li>
+                        </ul>
+                        <div class="box orange" style="margin-top:0.75rem;">
+                            <div class="box-title">Why one output, not a platform picker</div>
+                            <p>v2 made users choose a platform first. That's friction. The business owner wants to post
+                                everywhere. Generate Instagram + WhatsApp + hashtags in one response and let them copy
+                                what they need. One less decision = more likely to use it daily.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- F-04 -->
+                <div class="f-block core">
+                    <div class="f-head">
+                        <span class="f-id">F-04</span>
+                        <span class="f-name">Subscription &amp; Billing</span>
+                        <span class="badge go">MVP Core</span>
+                        <span class="f-est">3 days</span>
+                    </div>
+                    <div class="f-body">
+                        <p class="f-story">"Paying is easy and my access reflects my plan. I'm not hit with a hard wall
+                            — just a clear nudge to upgrade."</p>
+                        <ul class="f-list">
+                            <li>Paystack recurring monthly subscription</li>
+                            <li>Free: 7 generations total — enough to experience one full week before deciding to pay
+                            </li>
+                            <li>Beta (₦2,500/month): 30 generations + full plan — for first 50 users only</li>
+                            <li>Starter (₦5,000/month): 30 generations + full plan — standard pricing after beta</li>
+                            <li>Growth (₦12,000/month): 80 generations + priority support + early Phase 2 access</li>
+                            <li>Generation counter in Supabase, enforced server-side</li>
+                            <li>Paystack webhook updates subscription status</li>
+                            <li>Upgrade prompt is inline and contextual — never a hard block</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="sub">4.1 What was cut and why</h3>
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Decision</th>
+                                <th>Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="k">Bio Writer (standalone)</td>
+                                <td><span class="badge cut">Cut</span></td>
+                                <td>One-time use, no recurring value. Offer free on landing page to capture leads
+                                    instead.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Product Description Writer</td>
+                                <td><span class="badge cut">Cut</span></td>
+                                <td>Low recurring use. Add when fashion/food sellers specifically request it.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Standalone Hashtag Generator</td>
+                                <td><span class="badge cut">Cut</span></td>
+                                <td>Hashtags auto-generate with every caption. Separate page is waste of space.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Standalone WhatsApp Builder</td>
+                                <td><span class="badge wait">Phase 2</span></td>
+                                <td>Delivered through the plan: one plan day = WhatsApp broadcast. Not a separate
+                                    product.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">History filters</td>
+                                <td><span class="badge cut">Cut</span></td>
+                                <td>Simple list is enough. Filters are premature optimization.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Unlimited generations</td>
+                                <td><span class="badge cut">Cut</span></td>
+                                <td>80/month is more than any Nigerian SME needs. Unlimited is a cost center, not a
+                                    value-add.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Canva / post scheduling</td>
+                                <td><span class="badge wait">Phase 2</span></td>
+                                <td>API complexity not worth it before product-market fit.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Analytics dashboard</td>
+                                <td><span class="badge wait">Phase 2</span></td>
+                                <td>Nice to have. Does not drive the core retention loop.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 05 ONBOARDING -->
+            <section class="section" id="onboard">
+                <div class="s-num">Section 05</div>
+                <h2 class="s-title">Onboarding — Value Before Friction</h2>
+                <div class="s-rule"></div>
+                <p class="dim">The biggest conversion lever is showing the product before asking for a signup. Do this.
+                </p>
+
+                <h3 class="sub">5.1 The corrected landing page flow</h3>
+
+                <div class="onboard">
+                    <div class="ob-step hi">
+                        <div class="ob-n">1</div>
+                        <div class="ob-text">
+                            <div class="ob-label">Landing page — "What does your business sell?"</div>
+                            <p class="ob-desc">Single text field on the landing page. No signup yet. Just a text box and
+                                a button: "See your sample week." This is the hook. No commitment required.</p>
+                        </div>
+                    </div>
+                    <div class="ob-step hi">
+                        <div class="ob-n">2</div>
+                        <div class="ob-text">
+                            <div class="ob-label">Instant sample week — value before signup</div>
+                            <p class="ob-desc">AI generates a sample 7-day marketing plan based on what they typed. They
+                                can see the output. Real, specific content ideas for their type of business. This is the
+                                moment of trust.</p>
+                        </div>
+                    </div>
+                    <div class="ob-step">
+                        <div class="ob-n">3</div>
+                        <div class="ob-text">
+                            <div class="ob-label">Signup prompt — "Save this and get your real plan"</div>
+                            <p class="ob-desc">After seeing the sample: "Sign up to save this and generate real content
+                                from it." Now they understand the value and are motivated to create an account.
+                                Conversion is much higher here than at a cold landing page.</p>
+                        </div>
+                    </div>
+                    <div class="ob-step">
+                        <div class="ob-n">4</div>
+                        <div class="ob-text">
+                            <div class="ob-label">Full profile — fill in business details</div>
+                            <p class="ob-desc">After signup: business name, industry, target customer, tone, monthly
+                                goal. AI regenerates the plan with real context. This is the "aha moment" — the plan now
+                                feels tailored and specific.</p>
+                        </div>
+                    </div>
+                    <div class="ob-step hi">
+                        <div class="ob-n">5</div>
+                        <div class="ob-text">
+                            <div class="ob-label">First generation — within 90 seconds of signing up</div>
+                            <p class="ob-desc">Onboarding ends with the user tapping a day in their plan and generating
+                                their first piece of content. They must hit the core loop before they close the tab. If
+                                they get to this step, retention is dramatically higher.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box green">
+                    <div class="box-title">Why this matters</div>
+                    <p>Cold signup conversion rates on SaaS are typically 2–5%. Showing value before signup can push
+                        this to 15–30%. The business owner already trusts the product before they create an account.
+                        That trust carries over to payment.</p>
+                </div>
+
+                <h3 class="sub">5.2 Target: first generation under 90 seconds</h3>
+                <p>From landing on the site to generating the first piece of real content: under 90 seconds. If it takes
+                    longer, simplify the profile form. If onboarding is complex, users leave. Track
+                    time-to-first-generation as a primary metric from day one.</p>
+            </section>
+
+            <!-- 06 TECH -->
+            <section class="section" id="tech">
+                <div class="s-num">Section 06</div>
+                <h2 class="s-title">Technical Architecture</h2>
+                <div class="s-rule"></div>
+
+                <h3 class="sub">6.1 Stack — unchanged and correct</h3>
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Layer</th>
+                                <th>Tech</th>
+                                <th>Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="k">Frontend</td>
+                                <td>Next.js 14+ (App Router)</td>
+                                <td>Server actions, streaming, routing — one framework does it all</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Styling</td>
+                                <td>Tailwind CSS</td>
+                                <td>Keep it simple. No component libraries for MVP.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">AI</td>
+                                <td>Vercel AI SDK + GPT-4o-mini</td>
+                                <td>~₦0.50/generation. Streaming built in. Cheapest quality option.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Database</td>
+                                <td>Supabase (PostgreSQL)</td>
+                                <td>Free tier handles first year easily</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Auth</td>
+                                <td>Supabase Auth</td>
+                                <td>Zero config. Add Google OAuth in week 2 if needed.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Payments</td>
+                                <td>Paystack</td>
+                                <td>Best for Nigerian recurring billing. 1.5% capped ₦2,000.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Hosting</td>
+                                <td>Vercel</td>
+                                <td>Free tier, GitHub deploy, zero ops.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="sub">6.2 The AI prompt — with Nigerian context hardcoded</h3>
+                <p class="dim">This is where the "Nigerian context" claim becomes real, not just a tagline.</p>
+
+                <span class="code-label">app/api/generate/route.ts — simplified, Nigerian-context-aware</span>
+                <pre><code>import { streamText } from 'ai'
+import { openai } from '@ai-sdk/openai'
+
+// Nigerian calendar context — hardcoded, not AI-guessed
+const NIGERIAN_CONTEXT = {
+  jan:  'New Year, Detty December hangover, fresh start campaigns',
+  feb:  "Valentine's Day — big for fashion, food, beauty, gift sellers",
+  mar:  'End of first quarter, spring energy',
+  apr:  'Easter — family spending, food, clothing',
+  may:  'Ramadan (varies), modest fashion, food businesses',
+  jun:  'School is out, family time, mid-year',
+  jul:  'Sallah / Eid celebrations — massive for fashion &amp; food',
+  aug:  'Back-to-school — clothing, stationery, services',
+  sep:  'Back-to-school wind-down, Q4 buildup',
+  oct:  'Pre-Black Friday, year-end planning',
+  nov:  'Black Friday, pre-Christmas shopping surge',
+  dec:  'Christmas, Detty December, owambe season — biggest month for most businesses',
+  payday: 'Payday week (25th–5th): people are spending. Push promos.',
+}
+
+const GOAL_CAMPAIGN_MAP: Record&lt;string, string&gt; = {
+  more_enquiries: 'Create curiosity and desire. End every post with a CTA to DM or WhatsApp.',
+  increase_sales: 'Push urgency, scarcity, and value. Promos, bundles, limited offers.',
+  grow_followers: 'Engaging, shareable content. Questions, polls, relatable moments.',
+  launch_product: 'Week 1: teaser. Week 2: reveal. Week 3: launch &amp; urgency. Week 4: social proof.',
+  retain_customers: 'Appreciation posts, behind-the-scenes, loyalty offers, personal stories.',
+}
+
+export async function POST(req: Request) {
+  const { calendarIdea, extraDetail, profile, mode } = await req.json()
+  const month = new Date().toLocaleString('en', { month: 'short' }).toLowerCase()
+  const seasonContext = NIGERIAN_CONTEXT[month as keyof typeof NIGERIAN_CONTEXT] || ''
+  const goalStrategy = GOAL_CAMPAIGN_MAP[profile.goal] || ''
+
+  const system = `You are a senior Nigerian marketing consultant.
+Business: ${profile.name} | Industry: ${profile.industry}
+Sells: ${profile.whatTheySell} | Target: ${profile.targetCustomer} | Tone: ${profile.tone}
+Goal this month: ${profile.goal} — Strategy: ${goalStrategy}
+Current Nigerian context: ${seasonContext}
+Write like a local who understands Nigerian buying behaviour, culture, and slang where appropriate.
+Be specific. Generic advice is useless.`
+
+  // PLAN generation — produces specific, goal-driven weekly ideas
+  if (mode === 'plan') {
+    const planPrompt = `Generate a 7-day marketing plan (Monday to Sunday) for this Nigerian ${profile.industry} business.
+
+Their goal this month: ${goalStrategy}
+Current season/context: ${seasonContext}
+
+Rules:
+- Each idea must be SPECIFIC to this exact business and what they sell — not generic marketing advice
+- Each idea should directly support their monthly goal
+- Vary post types: product showcase, customer story, offer/promo, education, behind-the-scenes, engagement
+- Include at least one WhatsApp broadcast day and one sales/offer day
+- Make the ideas concrete enough that a content creator could execute without asking questions
+
+Format each day EXACTLY like this:
+DAY: Monday
+PLATFORM: Instagram
+TYPE: Product showcase
+IDEA: [The specific, actionable idea — 1–2 sentences]
+---`
+
+    const result = streamText({
+      model: openai('gpt-4o-mini'),
+      system, prompt: planPrompt, maxTokens: 800,
+    })
+    return result.toDataStreamResponse()
+  }
+
+  // CONTENT generation — from a calendar idea
+  const contentPrompt = `
+The business needs to post about: "${calendarIdea}"
+${extraDetail ? `Extra detail: ${extraDetail}` : ''}
+
+Write all three in one response:
+
+**INSTAGRAM CAPTION**
+[Compelling caption with emojis. Brand tone. Clear CTA. Feels Nigerian — not corporate.]
+
+**WHATSAPP VERSION**
+[Same message, more conversational. Feels like a message from a trusted friend who runs a business.
+Personal opener, body, CTA. No spam energy.]
+
+**HASHTAGS**
+[12 hashtags — Nigerian location tags, industry-specific, broad reach.
+Example mix: #LagosStyle #AbujaFashion #NigerianBusiness + niche + broad]`
+
+  const result = streamText({
+    model: openai('gpt-4o-mini'),
+    system, prompt: contentPrompt, maxTokens: 600,
+  })
+  return result.toDataStreamResponse()
+}</code></pre>
+
+                <h3 class="sub">6.3 Database schema — 4 tables, nothing more</h3>
+                <pre><code>-- auth.users managed by Supabase
+
+-- Business profiles (1 per user)
+create table profiles (
+  id         uuid primary key default gen_random_uuid(),
+  user_id    uuid references auth.users(id) on delete cascade unique,
+  name       text not null,
+  industry   text not null,
+  what_sells text not null,
+  target     text not null,
+  tone       text not null default 'Professional',
+  goal       text not null default 'increase_sales',
+  -- goal options: more_enquiries | increase_sales | grow_followers 
+  --               | launch_product | retain_customers
+  created_at timestamptz default now()
+);
+
+-- Weekly marketing plans
+create table plans (
+  id         uuid primary key default gen_random_uuid(),
+  user_id    uuid references auth.users(id) on delete cascade,
+  week_start date not null,
+  -- items: [{id, day, platform, type, idea, completed, generation_id}]
+  items      jsonb not null default '[]',
+  created_at timestamptz default now(),
+  unique(user_id, week_start)
+);
+
+-- All AI generations
+create table generations (
+  id           uuid primary key default gen_random_uuid(),
+  user_id      uuid references auth.users(id) on delete cascade,
+  plan_item_id text,        -- linked to plan item
+  idea_prompt  text not null,
+  extra_detail text,
+  output       text not null,
+  created_at   timestamptz default now()
+);
+
+-- Subscriptions
+create table subscriptions (
+  id              uuid primary key default gen_random_uuid(),
+  user_id         uuid references auth.users(id) on delete cascade unique,
+  plan            text not null default 'free',
+  paystack_sub_id text,
+  status          text not null default 'active',
+  gen_count       int default 0,
+  period_start    timestamptz default now(),
+  period_end      timestamptz
+);</code></pre>
+
+                <h3 class="sub">6.4 API routes</h3>
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Endpoint</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="k">POST /api/generate</td>
+                                <td>All AI work. mode=plan → marketing plan. mode=content → caption+WhatsApp+hashtags.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="k">GET/POST /api/profile</td>
+                                <td>Fetch or save business profile including monthly goal.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">GET/POST /api/plan</td>
+                                <td>Get this week's plan or generate a new one.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">PATCH /api/plan/[id]</td>
+                                <td>Mark a plan item complete or link a generation to it.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">GET /api/history</td>
+                                <td>Saved generations — simple list, newest first, no filters.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">POST /api/webhooks/paystack</td>
+                                <td>Update subscription status.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">GET /api/subscription</td>
+                                <td>Return current plan + generation count for client-side gating.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 07 BUSINESS -->
+            <section class="section" id="business">
+                <div class="s-num">Section 07</div>
+                <h2 class="s-title">Business Model — Honest</h2>
+                <div class="s-rule"></div>
+
+                <h3 class="sub">7.1 Pricing — conservative launch, then increase</h3>
+
+                <div class="pricing">
+                    <div class="plan">
+                        <div class="p-head">
+                            <div class="p-tag">Free</div>
+                            <div class="p-price">₦0</div>
+                            <div class="p-cycle">One week trial</div>
+                        </div>
+                        <div class="p-feats">
+                            <div class="p-feat">7 generations (one full week)</div>
+                            <div class="p-feat">Full marketing plan</div>
+                            <div class="p-feat">No card required</div>
+                            <div class="p-feat">Paywall after 7 uses</div>
+                        </div>
+                    </div>
+                    <div class="plan star">
+                        <div class="p-head">
+                            <div class="p-tag">Beta → Starter</div>
+                            <div class="p-price">₦2,500</div>
+                            <div class="p-cycle">beta price · rises to ₦5,000 after 50 users</div>
+                        </div>
+                        <div class="p-feats">
+                            <div class="p-feat">30 generations/month</div>
+                            <div class="p-feat">Weekly marketing plan</div>
+                            <div class="p-feat">Instagram + WhatsApp + hashtags</div>
+                            <div class="p-feat">Goal-driven campaigns</div>
+                            <div class="p-feat">Nigerian seasonal context</div>
+                            <div class="p-feat">Full generation history</div>
+                        </div>
+                    </div>
+                    <div class="plan">
+                        <div class="p-head">
+                            <div class="p-tag">Growth</div>
+                            <div class="p-price">₦12,000</div>
+                            <div class="p-cycle">per month</div>
+                        </div>
+                        <div class="p-feats">
+                            <div class="p-feat">80 generations/month</div>
+                            <div class="p-feat">Everything in Starter</div>
+                            <div class="p-feat">Priority support</div>
+                            <div class="p-feat">Early access Phase 2</div>
+                            <div class="p-feat">For power users &amp; agencies</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box amber">
+                    <div class="box-title">Why start at ₦2,500</div>
+                    <p>Unknown products don't get trusted easily. Lower beta pricing removes risk for early adopters who
+                        haven't seen testimonials yet. Once you have 20+ paying users and 5+ video testimonials, raise
+                        to ₦5,000. Getting the first 50 customers matters more than maximizing early revenue.</p>
+                </div>
+
+                <h3 class="sub">7.2 Honest revenue projections</h3>
+                <p class="dim">No existing audience, no distribution, starting from zero. If you have either, multiply
+                    by 1.5–2×.</p>
+
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Milestone</th>
+                                <th>Paying users</th>
+                                <th>Mix</th>
+                                <th>MRR</th>
+                                <th>Reality check</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="k">Month 2 (beta)</td>
+                                <td>10–20</td>
+                                <td>15 Beta, 3 Growth</td>
+                                <td class="hi">₦73,500</td>
+                                <td>Achievable from personal network + 1 community post</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Month 4</td>
+                                <td>25–40</td>
+                                <td>30 Starter, 5 Growth</td>
+                                <td class="ok">₦210,000</td>
+                                <td>Requires active GTM. Not passive.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Month 8</td>
+                                <td>60–90</td>
+                                <td>70 Starter, 15 Growth</td>
+                                <td class="ok">₦530,000</td>
+                                <td>Needs referrals + 1 distribution partner working</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Month 12</td>
+                                <td>100–150</td>
+                                <td>120 Starter, 25 Growth</td>
+                                <td class="ok">₦900,000</td>
+                                <td>Realistic if you have a content/community engine running</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="box green">
+                    <div class="box-title">₦900,000/month at month 12 is a real business</div>
+                    <p>With ~₦20,000/month in costs, this is essentially pure profit. The path there is hard — but not
+                        unusually hard for a well-positioned SaaS product with a real audience. The honest risk:
+                        Nigerian SMEs historically underinvest in software. The calendar habit is the answer to this —
+                        if they use it daily, they won't cancel.</p>
+                </div>
+
+                <h3 class="sub">7.3 Costs — nothing to worry about early</h3>
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cost</th>
+                                <th>At 100 users</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="k">OpenAI GPT-4o-mini</td>
+                                <td>~₦0.50/gen × 3,000 gens/month = ₦1,500</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Vercel</td>
+                                <td>Free tier until significant traffic</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Supabase</td>
+                                <td>Free for 12+ months on free tier</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Paystack</td>
+                                <td>1.5% of MRR ≈ ₦9,000/month at ₦600k MRR</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Domain + misc</td>
+                                <td>~₦3,000/month</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Total</td>
+                                <td class="ok">~₦14,000/month. 98% gross margin.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="sub">7.4 Validation — do this before writing code</h3>
+                <div class="box orange">
+                    <div class="box-title">The right validation test for Nigeria</div>
+                    <p>Most Nigerians won't prepay for software they haven't touched. A better test: Build a landing
+                        page with a screenshot + demo GIF + sample 7-day plan output. Get 50–100 waitlist signups from
+                        business owners. Manually onboard the first 10 for free and watch them use it. The feedback from
+                        those 10 is worth more than any PRD.</p>
+                </div>
+            </section>
+
+            <!-- 08 GTM -->
+            <section class="section" id="gtm">
+                <div class="s-num">Section 08</div>
+                <h2 class="s-title">Go-to-Market</h2>
+                <div class="s-rule"></div>
+
+                <h3 class="sub">8.1 Segments — ranked by speed to pay</h3>
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Segment</th>
+                                <th>Why they pay fast</th>
+                                <th>How to reach them</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="k">Instagram fashion sellers (Lagos)</td>
+                                <td>Post daily, hate writing captions, comfortable paying online</td>
+                                <td>Instagram DMs, fashion seller WhatsApp groups, influencer partnerships</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Food &amp; catering businesses</td>
+                                <td>WhatsApp is their primary sales tool. Bad broadcast = lost revenue.</td>
+                                <td>Food seller Facebook groups, Abuja/Lagos food communities</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Hair &amp; beauty salons</td>
+                                <td>Active on Instagram, want to look professional, clear ROI</td>
+                                <td>Beauty association groups, Instagram salon hashtags</td>
+                            </tr>
+                            <tr>
+                                <td class="k">SME coaches &amp; consultants</td>
+                                <td>Need LinkedIn + Twitter content. High willingness to pay for tools.</td>
+                                <td>LinkedIn outreach, Nigerian entrepreneur podcasts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="sub">8.2 First 20 paying customers — the plan</h3>
+
+                <h4 class="minor">Before you write a line of code</h4>
+                <ul class="sl">
+                    <li>Post on Twitter/X: "Building an AI tool that plans your marketing week and writes it for you.
+                        Nigerian business owners — would you pay ₦2,500/month? Reply yes or no." Screenshot the replies.
+                    </li>
+                    <li>DM 20 business owners personally. Ask: "Would you pay ₦2,500 for early access next month?" Track
+                        every yes with a name and number.</li>
+                    <li>If you get 10+ yeses, build. If fewer than 5, the pitch needs work — not the product.</li>
+                </ul>
+
+                <h4 class="minor">Build a waitlist landing page (day 1–2 of building)</h4>
+                <ul class="sl">
+                    <li>Landing page with: headline, a screenshot or GIF of a sample weekly plan, 3 bullet benefits,
+                        email capture</li>
+                    <li>Show the sample plan for a specific industry (fashion, food) — specific is more convincing than
+                        generic</li>
+                    <li>Target: 50 waitlist signups before full launch</li>
+                </ul>
+
+                <h4 class="minor">Soft launch (weeks 1–2 after build)</h4>
+                <ul class="sl">
+                    <li>Give 5 beta users free access for 4 weeks in exchange for a 60-second video testimonial</li>
+                    <li>Post a screen recording (no voiceover needed): landing page → type your business → see your week
+                        → tap a day → content generated. 30 seconds. Product sells itself.</li>
+                    <li>Submit to TechCabal, Zikoko, BusinessDay for a mention</li>
+                </ul>
+
+                <h4 class="minor">Month 2+ — building distribution</h4>
+                <ul class="sl">
+                    <li>Partner with 2–3 Nigerian business coaches. Offer 30% recurring commission per referral. This is
+                        your most powerful growth lever.</li>
+                    <li>Post 3×/week on Twitter: "This week's marketing plan for a Lagos fashion seller" — show a real
+                        generated plan, blur the business name. Show the product in the content.</li>
+                    <li>₦10,000 test Instagram ad to Lagos business owners aged 25–40 with a specific creative: "Stop
+                        staring at a blank phone. See what to post this week →"</li>
+                    <li>Referral programme: one free month per paying referral</li>
+                </ul>
+
+                <div class="box orange">
+                    <div class="box-title">The most important rule</div>
+                    <p>Your first 10 customers come from relationships, not ads. Every Nigerian entrepreneur knows 20
+                        other Nigerian entrepreneurs. Start there. Distribution is almost always harder than building
+                        the product.</p>
+                </div>
+            </section>
+
+            <!-- 09 TIMELINE -->
+            <section class="section" id="timeline">
+                <div class="s-num">Section 09</div>
+                <h2 class="s-title">Build Timeline</h2>
+                <div class="s-rule"></div>
+                <p class="dim">Part-time (4 hrs/day). Full-time cuts this to 3 weeks. Ship at week 5 no matter what.</p>
+
+                <div class="tl">
+                    <div class="tl-row">
+                        <div class="tl-week">Days 1–2</div>
+                        <div class="tl-build">Waitlist landing page with sample plan generator (no auth required).
+                            Collect emails.</div>
+                        <div class="tl-goal">First 20+ waitlist signups before building the full app</div>
+                    </div>
+                    <div class="tl-row">
+                        <div class="tl-week">Week 1</div>
+                        <div class="tl-build">Supabase auth, business profile form with monthly goal, routing,
+                            middleware</div>
+                        <div class="tl-goal">User can sign up and describe their business + set their goal</div>
+                    </div>
+                    <div class="tl-row">
+                        <div class="tl-week">Week 2</div>
+                        <div class="tl-build">Weekly marketing plan UI, AI plan generation with Nigerian context +
+                            goal-driven prompts, Supabase persistence, Monday auto-regeneration</div>
+                        <div class="tl-goal">User sees a specific, goal-driven plan after setup</div>
+                    </div>
+                    <div class="tl-row">
+                        <div class="tl-week">Week 3</div>
+                        <div class="tl-build">One-tap generation (Instagram + WhatsApp + hashtags in one stream), copy
+                            buttons, ✓ completion, history list, tone switcher</div>
+                        <div class="tl-goal">Full core loop works — user can go from plan to posted content in under 2
+                            minutes</div>
+                    </div>
+                    <div class="tl-row">
+                        <div class="tl-week">Week 4</div>
+                        <div class="tl-build">Paystack subscription, beta pricing, plan limits, upgrade prompts, webhook
+                        </div>
+                        <div class="tl-goal">Users can pay. First paying customer.</div>
+                    </div>
+                    <div class="tl-row">
+                        <div class="tl-week">Week 5</div>
+                        <div class="tl-build">Mobile responsiveness, error states, loading skeletons, onboarding
+                            value-before-signup flow, landing page polish, beta testing with 5 real users</div>
+                        <div class="tl-goal">Ship. Charge. Learn.</div>
+                    </div>
+                </div>
+
+                <div class="box red">
+                    <div class="box-title">The rule: ship at week 5, no exceptions</div>
+                    <p>A working product with 3 paying customers teaches you more than PRD v5, v6, and v7 combined. The
+                        remaining unknowns are not in the document — they're in whether real business owners form a
+                        habit of opening the plan every Monday. Only real users can answer that. Stop refining
+                        documents. Ship.</p>
+                </div>
+            </section>
+
+            <!-- 10 METRICS -->
+            <section class="section" id="metrics">
+                <div class="s-num">Section 10</div>
+                <h2 class="s-title">Success Metrics</h2>
+                <div class="s-rule"></div>
+                <p class="dim">One primary metric. Seven supporting ones. Check weekly.</p>
+
+                <div class="box orange">
+                    <div class="box-title">The one metric that matters above all others</div>
+                    <p>% of active users who generate content from the plan at least twice per week. This number tells
+                        you if you've built a habit. If it's above 40%, you have something real. If it's below 20%, the
+                        plan ideas are not specific enough — that's the problem to fix.</p>
+                </div>
+
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Target</th>
+                                <th>What it tells you</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="k">Weekly plan usage rate</td>
+                                <td class="hi">40%+ generate 2×/week from plan</td>
+                                <td>The habit is forming. This is the leading indicator for everything.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">MRR</td>
+                                <td class="ok">₦200k by month 4</td>
+                                <td>The business is alive</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Free → paid conversion</td>
+                                <td class="ok">15–25%</td>
+                                <td>The value is clear enough to pay for</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Monthly churn</td>
+                                <td class="ok">Under 6%</td>
+                                <td>Users are getting ongoing value</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Time to first generation</td>
+                                <td class="ok">Under 90 seconds from landing page</td>
+                                <td>Onboarding is working. If slow, simplify.</td>
+                            </tr>
+                            <tr>
+                                <td class="k">Monday plan open rate</td>
+                                <td class="ok">60%+ of active users</td>
+                                <td>The weekly habit is real</td>
+                            </tr>
+                            <tr>
+                                <td class="k">NPS</td>
+                                <td class="ok">40+</td>
+                                <td>Worth recommending</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="sub">Reading the signals</h3>
+                <div class="sig-grid">
+                    <div class="sig-box green">
+                        <div class="sig-title">✅ The business is working</div>
+                        <ul class="sig-list">
+                            <li>Users open the plan every Monday without being reminded</li>
+                            <li>You get referrals you didn't ask for</li>
+                            <li>Users complain when there's downtime</li>
+                            <li>People ask for specific features — they care</li>
+                            <li>Free users upgrade before you even reach out</li>
+                            <li>Users update their monthly goal each month</li>
+                        </ul>
+                    </div>
+                    <div class="sig-box red">
+                        <div class="sig-title">🚨 Fix these immediately</div>
+                        <ul class="sig-list">
+                            <li>Users sign up but never generate content</li>
+                            <li>Users generate once and disappear</li>
+                            <li>Monday plan open rate below 30%</li>
+                            <li>Users say plan ideas feel generic or repetitive</li>
+                            <li>Free trial ends with no upgrade after 2 weeks</li>
+                            <li>Churn above 10% per month</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="box green" style="margin-top:1.5rem;">
+                    <div class="box-title">If the plan ideas feel generic — this is the fix</div>
+                    <p>Don't add more features. Make the AI smarter. Improve the plan generation prompt to use more
+                        profile detail, more seasonal context, and previous-week output. The quality of the plan is the
+                        product's core differentiator — it cannot be generic, or users will drift to ChatGPT.</p>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <div class="closing">
+        <div class="page">
+            <h2>Stop refining.<br><em>Start building.</em></h2>
+            <p>The document is done. The remaining risks are not in writing — they're in whether real business owners
+                use it every Monday. Only shipping answers that.</p>
+            <div class="closing-rule"></div>
+            <div class="closing-url">postlyai.com</div>
+            <div class="closing-sub">Built by Taiwo Adeyemo · atm-self.vercel.app · PRD v4.0 — Final</div>
+        </div>
+    </div>
+
+    <footer>
+        <span>Postly AI — PRD v4.0 — Final — Confidential</span>
+        <span>© 2025 Taiwo Adeyemo</span>
+    </footer>
+
+</body>
+
+</html>

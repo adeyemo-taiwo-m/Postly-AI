@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Postly AI — Product Requirements Document v3.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=Epilogue:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0C0C0F;
+    --surface:  #131318;
+    --surface2: #1B1B23;
+    --border:   #27272F;
+    --border2:  #3A3A47;
+    --text:     #E8E6F0;
+    --muted:    #6E6C80;
+    --muted2:   #9896AB;
+    --gold:     #D4A843;
+    --gold-dim: #8A6A20;
+    --gold-bg:  rgba(212,168,67,0.08);
+    --green:    #2E9E6B;
+    --green-bg: rgba(46,158,107,0.08);
+    --red:      #C44B4B;
+    --red-bg:   rgba(196,75,75,0.08);
+    --amber:    #C47B2B;
+    --amber-bg: rgba(196,123,43,0.08);
+    --page:     900px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    background: rgba(12,12,15,0.94);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem;
+  }
+  .nav-brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 900; font-size: 1.15rem;
+    color: var(--text); letter-spacing: -0.03em;
+  }
+  .nav-brand em { font-style: italic; color: var(--gold); }
+  .nav-links { display: flex; gap: 1.25rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.72rem; text-decoration: none;
+    color: var(--muted); font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem; color: var(--muted);
+    border: 1px solid var(--border2);
+    padding: 3px 10px; border-radius: 3px;
+  }
+
+  /* ─── PAGE WRAPPER ─── */
+  .page { max-width: var(--page); margin: 0 auto; padding: 0 2rem; }
+
+  /* ─── COVER ─── */
+  .cover {
+    min-height: 100vh;
+    background: var(--bg);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 6rem 0 5rem;
+    position: relative; overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .cover-rule {
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--gold-dim), transparent);
+  }
+  /* decorative grid lines */
+  .cover::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(212,168,67,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,168,67,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+  .cover-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(212,168,67,0.07) 0%, transparent 65%);
+    right: -100px; bottom: -150px;
+    pointer-events: none;
+  }
+  .cover-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--gold-bg);
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 2px;
+    padding: 5px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; color: var(--gold);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 2rem;
+    position: relative; z-index: 1;
+  }
+  .cover-badge::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold);
+    animation: blink 2s ease infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  .cover h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(3.5rem, 9vw, 6.5rem);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    margin-bottom: 0.6rem;
+    position: relative; z-index: 1;
+  }
+  .cover h1 em { font-style: italic; color: var(--gold); }
+  .cover-sub {
+    font-size: 1.1rem; color: var(--muted2);
+    font-weight: 300; max-width: 560px;
+    margin-bottom: 2.5rem;
+    position: relative; z-index: 1;
+  }
+
+  .cover-callout {
+    border-left: 3px solid var(--gold);
+    padding: 1rem 1.5rem;
+    background: var(--gold-bg);
+    max-width: 620px;
+    margin-bottom: 2.5rem;
+    position: relative; z-index: 1;
+  }
+  .cover-callout p {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--gold);
+    margin: 0;
+  }
+
+  .cover-meta {
+    display: flex; gap: 2.5rem; flex-wrap: wrap;
+    position: relative; z-index: 1;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .meta-item { display: flex; flex-direction: column; gap: 3px; }
+  .meta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--muted);
+  }
+  .meta-value { font-size: 0.9rem; font-weight: 600; color: var(--muted2); }
+  .meta-value.gold { color: var(--gold); }
+
+  /* ─── MAIN ─── */
+  main { padding-top: 52px; }
+
+  /* ─── SECTION ─── */
+  .section {
+    padding: 5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--gold);
+    display: inline-block;
+    border: 1px solid rgba(212,168,67,0.25);
+    padding: 3px 10px; border-radius: 2px;
+    margin-bottom: 1rem;
+  }
+  h2.section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 2.4rem; font-weight: 900;
+    letter-spacing: -0.04em; line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .section-lead {
+    font-size: 0.95rem; color: var(--muted2);
+    max-width: 600px; margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+  .section-rule {
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold-dim), transparent);
+    margin-bottom: 2.5rem;
+  }
+
+  h3.sub-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700; font-size: 1.15rem;
+    color: var(--gold);
+    margin: 2.5rem 0 0.75rem;
+    letter-spacing: -0.02em;
+  }
+  h4.minor-title {
+    font-size: 0.78rem; font-weight: 700;
+    color: var(--muted2);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin: 1.75rem 0 0.6rem;
+  }
+
+  p { margin-bottom: 1rem; color: var(--text); line-height: 1.8; }
+  p.muted { color: var(--muted2); font-size: 0.9rem; }
+
+  /* ─── TRUTH BOX (critique callout) ─── */
+  .truth-box {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-left: 3px solid var(--red);
+    border-radius: 4px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .truth-box-title {
+    font-size: 0.78rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--red); margin-bottom: 0.5rem;
+  }
+  .truth-box p { margin: 0; font-size: 0.9rem; color: var(--muted2); }
+
+  /* ─── INFO BOX ─── */
+  .info-box {
+    border-radius: 4px;
+    padding: 1.1rem 1.4rem;
+    margin: 1.5rem 0;
+    border-left: 3px solid;
+  }
+  .info-box.gold   { background: var(--gold-bg);  border-color: var(--gold); }
+  .info-box.green  { background: var(--green-bg); border-color: var(--green); }
+  .info-box.amber  { background: var(--amber-bg); border-color: var(--amber); }
+  .info-box.red    { background: var(--red-bg);   border-color: var(--red); }
+  .info-box-title {
+    font-size: 0.78rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    margin-bottom: 0.4rem;
+  }
+  .info-box.gold  .info-box-title { color: var(--gold); }
+  .info-box.green .info-box-title { color: var(--green); }
+  .info-box.amber .info-box-title { color: var(--amber); }
+  .info-box.red   .info-box-title { color: var(--red); }
+  .info-box p { margin: 0; font-size: 0.88rem; color: var(--muted2); }
+
+  /* ─── CARDS ─── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+    background: var(--border);
+  }
+  .card {
+    background: var(--surface);
+    padding: 1.25rem;
+    transition: background 0.2s;
+  }
+  .card:hover { background: var(--surface2); }
+  .card-icon { font-size: 1.4rem; margin-bottom: 0.6rem; }
+  .card-title {
+    font-family: 'Epilogue', sans-serif;
+    font-weight: 700; font-size: 0.9rem;
+    margin-bottom: 0.3rem; color: var(--text);
+  }
+  .card-desc { font-size: 0.83rem; color: var(--muted2); line-height: 1.65; }
+
+  /* ─── TABLE ─── */
+  .table-wrap {
+    overflow-x: auto; margin: 1.5rem 0;
+    border: 1px solid var(--border); border-radius: 4px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 0.855rem; }
+  thead tr { background: var(--surface2); border-top: 2px solid var(--gold); }
+  thead th {
+    padding: 11px 16px; text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--muted2);
+    font-weight: 500;
+  }
+  tbody tr:nth-child(even) { background: var(--surface); }
+  tbody tr:nth-child(odd)  { background: var(--bg); }
+  tbody td {
+    padding: 10px 16px; color: var(--text);
+    vertical-align: top;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  td.key { font-weight: 600; color: var(--muted2); white-space: nowrap; }
+  td.green { color: var(--green); font-weight: 600; }
+  td.red   { color: var(--red); }
+  td.gold  { color: var(--gold); font-weight: 600; }
+  td.strike { text-decoration: line-through; color: var(--muted); }
+
+  /* ─── PRICING ─── */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+    background: var(--border);
+  }
+  .plan { background: var(--surface); display: flex; flex-direction: column; }
+  .plan.featured { background: var(--surface2); }
+  .plan-head { padding: 1.25rem; border-bottom: 1px solid var(--border); }
+  .plan.featured .plan-head { border-bottom-color: var(--gold-dim); }
+  .plan-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--muted2);
+    margin-bottom: 0.5rem;
+  }
+  .plan.featured .plan-name { color: var(--gold); }
+  .plan-price {
+    font-family: 'Fraunces', serif;
+    font-weight: 900; font-size: 2rem;
+    line-height: 1; color: var(--text);
+  }
+  .plan.featured .plan-price { color: var(--gold); }
+  .plan-sub { font-size: 0.78rem; color: var(--muted); margin-top: 3px; }
+  .plan-features { padding: 1rem 1.25rem; flex: 1; }
+  .plan-feature {
+    font-size: 0.82rem; padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 8px;
+    color: var(--muted2);
+  }
+  .plan-feature:last-child { border-bottom: none; }
+  .plan-feature::before { content: '—'; color: var(--border2); flex-shrink: 0; font-size: 0.75rem; margin-top: 3px; }
+  .plan.featured .plan-feature::before { content: '✓'; color: var(--gold); font-weight: 700; }
+
+  /* ─── FEATURE BLOCKS ─── */
+  .feature-block {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .feature-block.priority { border-color: var(--gold-dim); }
+  .feature-block-head {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 0.8rem 1.25rem;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .feature-block.priority .feature-block-head { background: var(--gold-bg); border-bottom-color: var(--gold-dim); }
+  .feature-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem; text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--border2); color: var(--muted2);
+    padding: 2px 8px; border-radius: 2px; flex-shrink: 0;
+  }
+  .feature-block.priority .feature-id { background: var(--gold); color: #000; }
+  .feature-name {
+    font-weight: 700; font-size: 0.95rem;
+    color: var(--text); flex: 1;
+  }
+  .feature-est {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem; color: var(--muted);
+    white-space: nowrap;
+  }
+  .badge {
+    font-size: 0.62rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 2px 8px; border-radius: 2px;
+  }
+  .badge.keep   { background: var(--green); color: #fff; }
+  .badge.cut    { background: var(--red);   color: #fff; }
+  .badge.phase2 { background: var(--border2); color: var(--muted2); }
+  .feature-body { padding: 1.1rem 1.25rem; }
+  .feature-story { font-style: italic; color: var(--muted); font-size: 0.875rem; margin-bottom: 0.75rem; }
+  .feature-list { list-style: none; }
+  .feature-list li {
+    font-size: 0.875rem; padding: 3px 0 3px 1.4rem;
+    position: relative; color: var(--muted2);
+  }
+  .feature-list li::before { content: '→'; position: absolute; left: 0; color: var(--gold-dim); }
+
+  /* ─── COMPARISON TABLE ─── */
+  .vp-wrap {
+    border: 1px solid var(--border);
+    border-radius: 4px; overflow: hidden;
+    margin: 1.5rem 0;
+  }
+  .vp-head {
+    display: grid; grid-template-columns: 1fr 1fr;
+    background: var(--surface2);
+    border-top: 2px solid var(--gold);
+  }
+  .vp-head div {
+    padding: 10px 16px; font-weight: 700;
+    font-size: 0.8rem; text-align: center;
+    color: var(--muted2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em;
+  }
+  .vp-row { display: grid; grid-template-columns: 1fr 1fr; }
+  .vp-cell {
+    padding: 9px 16px; font-size: 0.875rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .vp-cell.bad  { color: var(--red); background: var(--red-bg); }
+  .vp-cell.good { color: var(--green); background: var(--green-bg); font-weight: 600; }
+
+  /* ─── TIMELINE ─── */
+  .timeline { margin: 1.5rem 0; }
+  .tl-row {
+    display: grid; grid-template-columns: 80px 1fr 1fr;
+    gap: 1rem; padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  .tl-row:first-child { border-top: 1px solid var(--border); }
+  .tl-week {
+    font-family: 'Fraunces', serif;
+    font-weight: 700; font-size: 0.9rem;
+    color: var(--gold);
+  }
+  .tl-build { font-size: 0.87rem; color: var(--text); }
+  .tl-goal { font-size: 0.87rem; color: var(--green); font-style: italic; }
+
+  /* ─── TOC ─── */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+    border-top: 2px solid var(--gold);
+  }
+  .toc-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 900; font-size: 1.1rem;
+    color: var(--text); margin-bottom: 1.25rem;
+    letter-spacing: -0.03em;
+  }
+  .toc-list {
+    list-style: none;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0.2rem 2rem;
+  }
+  .toc-list li a {
+    display: flex; gap: 0.75rem; align-items: baseline;
+    color: var(--muted2); text-decoration: none;
+    font-size: 0.875rem; padding: 4px 0;
+    transition: color 0.2s;
+  }
+  .toc-list li a:hover { color: var(--gold); }
+  .toc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; color: var(--muted); flex-shrink: 0;
+  }
+
+  /* ─── SIGNAL BOXES ─── */
+  .signal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+  .signal-box { border-radius: 4px; padding: 1.1rem; border: 1px solid; border-top-width: 2px; }
+  .signal-box.green { background: var(--green-bg); border-color: var(--green); }
+  .signal-box.red   { background: var(--red-bg);   border-color: var(--red); }
+  .signal-title { font-weight: 700; font-size: 0.85rem; margin-bottom: 0.75rem; }
+  .signal-box.green .signal-title { color: var(--green); }
+  .signal-box.red   .signal-title { color: var(--red); }
+  .signal-list { list-style: none; }
+  .signal-list li { font-size: 0.83rem; padding: 4px 0 4px 1.3rem; position: relative; color: var(--muted2); }
+  .signal-list li::before { position: absolute; left: 0; }
+  .signal-box.green .signal-list li::before { content: '✓'; color: var(--green); font-weight: 700; }
+  .signal-box.red   .signal-list li::before { content: '✗'; color: var(--red); font-weight: 700; }
+
+  /* ─── STYLED LIST ─── */
+  ul.styled { list-style: none; margin: 1rem 0; }
+  ul.styled li {
+    padding: 4px 0 4px 1.4rem;
+    position: relative; font-size: 0.9rem; color: var(--muted2);
+  }
+  ul.styled li::before { content: '▸'; position: absolute; left: 0; color: var(--gold-dim); }
+
+  /* ─── CODE ─── */
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px; padding: 1.25rem;
+    overflow-x: auto; margin: 1rem 0;
+    border-top: 2px solid var(--gold-dim);
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; color: #B8B0D4; line-height: 1.75;
+  }
+  .code-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; text-transform: uppercase;
+    letter-spacing: 0.09em; color: var(--gold);
+    display: block; margin-bottom: 0.35rem;
+  }
+
+  /* ─── TWO COL ─── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0; }
+
+  /* ─── CLOSING ─── */
+  .closing {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 6rem 0;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .closing::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(212,168,67,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .closing h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 3rem; font-weight: 900;
+    letter-spacing: -0.04em; margin-bottom: 0.75rem;
+    position: relative;
+  }
+  .closing h2 em { font-style: italic; color: var(--gold); }
+  .closing p { color: var(--muted2); max-width: 460px; margin: 0 auto 2rem; }
+  .closing-rule { height: 1px; background: var(--border); max-width: 300px; margin: 2rem auto; }
+  .closing-url { font-family: 'Fraunces', serif; font-weight: 700; font-size: 1rem; color: var(--gold); }
+  .closing-sub { color: var(--muted); font-size: 0.82rem; margin-top: 0.4rem; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem; color: var(--muted);
+  }
+
+  /* ─── CRITIQUE BANNER ─── */
+  .critique-banner {
+    background: var(--red-bg);
+    border: 1px solid rgba(196,75,75,0.3);
+    border-radius: 4px;
+    padding: 1.25rem 1.5rem;
+    margin: 0 0 2.5rem;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .critique-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .critique-text { font-size: 0.875rem; color: var(--muted2); }
+  .critique-text strong { color: var(--red); }
+
+  /* ─── ANSWER BOX ─── */
+  .answer-box {
+    border: 1px solid var(--gold-dim);
+    border-radius: 4px;
+    padding: 1.5rem;
+    background: var(--gold-bg);
+    margin: 1.5rem 0;
+  }
+  .answer-box-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700; font-size: 1rem;
+    color: var(--gold); margin-bottom: 0.5rem;
+  }
+  .answer-box p { margin: 0; font-size: 0.9rem; color: var(--muted2); }
+
+  @media (max-width: 680px) {
+    .toc-list { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .two-col, .signal-grid { grid-template-columns: 1fr; }
+    .tl-row { grid-template-columns: 1fr; }
+    nav .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Postly<em>AI</em></div>
+  <ul class="nav-links">
+    <li><a href="#honesty">Honesty</a></li>
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#what-changed">What Changed</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#tech">Tech</a></li>
+    <li><a href="#business">Business</a></li>
+    <li><a href="#gtm">GTM</a></li>
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#metrics">Metrics</a></li>
+  </ul>
+  <div class="nav-tag">PRD v3.0 · Jun 2025</div>
+</nav>
+
+<!-- COVER -->
+<section class="cover">
+  <div class="cover-rule"></div>
+  <div class="cover-glow"></div>
+  <div class="page">
+    <div class="cover-badge">Revised — Version 3.0</div>
+    <h1>Postly<em> AI</em></h1>
+    <p class="cover-sub">Product Requirements Document — Your AI Marketing Assistant for Nigerian Businesses</p>
+
+    <div class="cover-callout">
+      <p>"Postly AI tells you what to post today, writes it for you, and keeps you consistent all week."</p>
+    </div>
+
+    <div class="cover-meta">
+      <div class="meta-item">
+        <span class="meta-label">Version</span>
+        <span class="meta-value">3.0 — Corrected</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Date</span>
+        <span class="meta-value">June 2025</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">What changed</span>
+        <span class="meta-value">Leaner MVP · Honest projections · Calendar-first</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Stack</span>
+        <span class="meta-value gold">Next.js · Supabase · Vercel AI SDK</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Built by</span>
+        <span class="meta-value">Taiwo Adeyemo</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main>
+<div class="page" style="padding-top: 4rem; padding-bottom: 2rem;">
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <ul class="toc-list">
+      <li><a href="#honesty"><span class="toc-num">01</span> What v2 Got Wrong — Honest</a></li>
+      <li><a href="#problem"><span class="toc-num">02</span> The Real Competitive Problem</a></li>
+      <li><a href="#what-changed"><span class="toc-num">03</span> What Changes in v3</a></li>
+      <li><a href="#features"><span class="toc-num">04</span> Leaner Feature Set</a></li>
+      <li><a href="#tech"><span class="toc-num">05</span> Technical Architecture</a></li>
+      <li><a href="#business"><span class="toc-num">06</span> Honest Business Model</a></li>
+      <li><a href="#gtm"><span class="toc-num">07</span> Go-to-Market</a></li>
+      <li><a href="#timeline"><span class="toc-num">08</span> Build Timeline</a></li>
+      <li><a href="#metrics"><span class="toc-num">09</span> Success Metrics</a></li>
+    </ul>
+  </div>
+
+  <!-- 01 HONESTY -->
+  <section class="section" id="honesty">
+    <div class="section-num">Section 01</div>
+    <h2 class="section-title">What v2 Got Wrong</h2>
+    <div class="section-rule"></div>
+
+    <p class="muted">This section exists because ignoring these problems means building the wrong product. Read it carefully.</p>
+
+    <div class="truth-box">
+      <div class="truth-box-title">Problem #1 — Too many features before proving demand</div>
+      <p>v2 listed 8 major features as "MVP." That's not an MVP. That's a full product. Most founders fail because they build 8 things before discovering nobody wants the first one. The corrected MVP has 3 things.</p>
+    </div>
+
+    <div class="truth-box">
+      <div class="truth-box-title">Problem #2 — "AI caption generator" is a feature, not a business</div>
+      <p>People don't buy captions. They buy more sales, more enquiries, more customers. The pitch "AI writes captions" has a free competitor at every corner: ChatGPT, Gemini, Meta AI, Claude. The pitch must shift to something harder to replicate.</p>
+    </div>
+
+    <div class="truth-box">
+      <div class="truth-box-title">Problem #3 — Revenue projections were fantasy</div>
+      <p>v2 projected 20 paying users in month 3 and 150 by month 12. Without an existing audience or distribution, a more realistic path is 5–15 paying users in month 3 and 50–100 by month 12. The corrected model reflects this honestly.</p>
+    </div>
+
+    <div class="truth-box">
+      <div class="truth-box-title">Problem #4 — Retention was not solved</div>
+      <p>If a user generates 20 captions in week one and saves them, why come back? Recurring SaaS needs a recurring reason to return. Recurring pain. The calendar is the answer — but v2 buried it under 7 other features instead of making it the product.</p>
+    </div>
+
+    <div class="truth-box">
+      <div class="truth-box-title">Problem #5 — Unlimited generations are not valuable</div>
+      <p>Most SMEs post 3–5 times per week — roughly 20 posts per month. Unlimited is not a selling point. It inflates your AI costs while selling something nobody actually needs. The Growth plan offering "unlimited" is not a meaningful upgrade from 30/month.</p>
+    </div>
+  </section>
+
+  <!-- 02 REAL COMPETITOR -->
+  <section class="section" id="problem">
+    <div class="section-num">Section 02</div>
+    <h2 class="section-title">The Real Competitive Problem</h2>
+    <div class="section-rule"></div>
+
+    <p>v2 treated Buffer and Hootsuite as competitors. They are not the threat. The real threat is this:</p>
+
+    <div class="answer-box">
+      <div class="answer-box-title">The question every potential customer will ask</div>
+      <p>Why should I pay ₦5,000/month when I can open ChatGPT and type "write me an Instagram caption for my new lace material"? For free. Every day.</p>
+    </div>
+
+    <p>This question must be answered — not for investors, not for developers — for the customer. If you can't answer it convincingly, the product has no durable reason to exist.</p>
+
+    <h3 class="sub-title">The real competitors</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Competitor</th><th>What they offer</th><th>Why Postly must be different</th></tr></thead>
+        <tbody>
+          <tr><td class="key">ChatGPT (free)</td><td>Writes any caption, for any business, instantly</td><td>No Nigerian context, no business memory, no weekly plan, no structure — user must figure it all out themselves</td></tr>
+          <tr><td class="key">Meta AI (WhatsApp)</td><td>Built into WhatsApp. Free. Growing fast.</td><td>Same: no business profile, no calendar, no marketing decisions</td></tr>
+          <tr><td class="key">Claude / Gemini</td><td>Free, capable AI writing</td><td>Same: no structure, no Nigerian seasonal context, no retention mechanism</td></tr>
+          <tr><td class="key">Hiring an SMM</td><td>₦50k–₦150k/month for a human</td><td>Postly is 10–30× cheaper. This is the real comparison to make.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-box gold">
+      <div class="info-box-title">The actual answer — what free AI cannot do</div>
+      <p>Free AI will write captions when you remember to ask. Postly tells you what to post today, plans your week, understands your Nigerian business context, and becomes the habit of coming back every morning. The value is structure and guidance — not just text generation. That's what you are selling.</p>
+    </div>
+
+    <h3 class="sub-title">The repositioned pitch</h3>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon">❌</div>
+        <div class="card-title">Old pitch (v2)</div>
+        <div class="card-desc">"AI writes your Instagram captions."<br>— A feature. Free alternatives exist. Easy to ignore.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">✅</div>
+        <div class="card-title">New pitch (v3)</div>
+        <div class="card-desc">"Your AI marketing assistant — it tells you what to post today, writes it for you, and keeps you consistent all week."<br>— A system. A habit. A replacement for the SMM they can't afford.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 WHAT CHANGED -->
+  <section class="section" id="what-changed">
+    <div class="section-num">Section 03</div>
+    <h2 class="section-title">What Changes in v3</h2>
+    <div class="section-rule"></div>
+
+    <h3 class="sub-title">3.1 The product is now calendar-first</h3>
+    <p>The weekly content calendar is no longer one feature among eight. It <em>is</em> the product. Everything else — caption generation, hashtags, WhatsApp broadcasts — flows out of the calendar. The user's first experience after signup is seeing their week planned for them.</p>
+
+    <div class="vp-wrap">
+      <div class="vp-head">
+        <div>v2 Product Experience</div>
+        <div>v3 Product Experience</div>
+      </div>
+      <div class="vp-row"><div class="vp-cell bad">User lands on a "generator" page and types into a blank box</div><div class="vp-cell good">User lands on a weekly calendar showing 7 post ideas already planned</div></div>
+      <div class="vp-row"><div class="vp-cell bad">8 features visible — user doesn't know where to start</div><div class="vp-cell good">One clear action: "Tap Tuesday's idea to write it now"</div></div>
+      <div class="vp-row"><div class="vp-cell bad">No reason to return after first session</div><div class="vp-cell good">New week = new plan every Monday — clear reason to open the app</div></div>
+      <div class="vp-row"><div class="vp-cell bad">Feature-first onboarding</div><div class="vp-cell good">Outcome-first onboarding: first thing new users see is value</div></div>
+    </div>
+
+    <h3 class="sub-title">3.2 Features cut from MVP</h3>
+    <p class="muted">Cut now. Build only after 10+ paying customers ask for them specifically.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Feature</th><th>Status</th><th>Why it was cut</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Standalone Bio Writer</td><td><span class="badge cut">Cut</span></td><td>One-time use. No recurring value. Can be a free tool to acquire users, not a paid feature.</td></tr>
+          <tr><td class="key">Standalone Product Description Writer</td><td><span class="badge cut">Cut</span></td><td>Rarely used once the business sets up their products. Low retention value.</td></tr>
+          <tr><td class="key">Standalone Hashtag Generator page</td><td><span class="badge cut">Cut</span></td><td>Hashtags auto-generate alongside every caption. Separate page is redundant.</td></tr>
+          <tr><td class="key">Standalone WhatsApp Builder page</td><td><span class="badge phase2">Phase 2</span></td><td>Move into the calendar flow: one calendar day = WhatsApp broadcast. Not a separate product.</td></tr>
+          <tr><td class="key">History filters</td><td><span class="badge cut">Cut</span></td><td>Nice-to-have. Calendar makes history less important anyway. Simple list is enough.</td></tr>
+          <tr><td class="key">Unlimited generation plan</td><td><span class="badge cut">Cut</span></td><td>Users post ~20x/month. "Unlimited" is not meaningful. Increases costs, adds no value.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-title">3.3 The one workflow that matters</h3>
+    <div class="info-box gold">
+      <div class="info-box-title">The core loop — this is all that needs to work perfectly</div>
+      <p>User opens app → sees their week → taps today's idea → AI writes the caption + WhatsApp version + hashtags in one output → user copies and posts → taps ✓ done → tomorrow they come back for the next one. That loop is the product. Everything else is secondary.</p>
+    </div>
+  </section>
+
+  <!-- 04 FEATURES -->
+  <section class="section" id="features">
+    <div class="section-num">Section 04</div>
+    <h2 class="section-title">Leaner Feature Set</h2>
+    <div class="section-rule"></div>
+
+    <p class="muted">Three things for MVP. Four if you're ahead of schedule. Nothing else until you have 10+ paying customers.</p>
+
+    <!-- F-01 -->
+    <div class="feature-block priority">
+      <div class="feature-block-head">
+        <span class="feature-id">F-01</span>
+        <span class="feature-name">Business Profile Setup</span>
+        <span class="badge keep">MVP Core</span>
+        <span class="feature-est">1–2 days</span>
+      </div>
+      <div class="feature-body">
+        <p class="feature-story">"As a user, I want to describe my business once and have the AI remember it forever."</p>
+        <ul class="feature-list">
+          <li>Email/password signup via Supabase Auth</li>
+          <li>Onboarding form: business name, industry, what they sell, target customer, tone (Fun / Bold / Professional / Casual)</li>
+          <li>Profile saved to Supabase, injected into every AI prompt</li>
+          <li>Editable in settings — but users rarely need to touch it again</li>
+        </ul>
+        <div class="info-box gold" style="margin-top:0.75rem;">
+          <div class="info-box-title">Onboarding insight</div>
+          <p>After signup, skip the dashboard entirely. Take the user straight to the profile form, then immediately generate their first week's calendar. First experience must show value within 90 seconds.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- F-02 -->
+    <div class="feature-block priority">
+      <div class="feature-block-head">
+        <span class="feature-id">F-02</span>
+        <span class="feature-name">Weekly Content Calendar — The Product</span>
+        <span class="badge keep">MVP Core</span>
+        <span class="feature-est">3 days</span>
+      </div>
+      <div class="feature-body">
+        <p class="feature-story">"As a user, I want to see exactly what to post each day this week so I never have to think about it."</p>
+        <ul class="feature-list">
+          <li>This is the home screen — the first thing users see every session</li>
+          <li>7-day grid (Mon–Sun) with one post idea per day, tailored to their industry</li>
+          <li>AI considers Nigerian seasonal context: Eid, Christmas, back-to-school, Black Friday, TGIF, payday week, etc.</li>
+          <li>Each day shows: platform icon + idea + estimated tone (Promo / Story / Engagement / Education)</li>
+          <li>Calendar auto-regenerates every Monday. Saved to Supabase with week_start key.</li>
+          <li>Completed days show a ✓ checkmark (user marks manually)</li>
+          <li>"Regenerate week" button if they don't like the suggestions</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- F-03 -->
+    <div class="feature-block priority">
+      <div class="feature-block-head">
+        <span class="feature-id">F-03</span>
+        <span class="feature-name">One-Click Content Generation from Calendar</span>
+        <span class="badge keep">MVP Core</span>
+        <span class="feature-est">3–4 days</span>
+      </div>
+      <div class="feature-body">
+        <p class="feature-story">"I tap Tuesday's idea and the AI writes the caption, WhatsApp version, and hashtags — all at once."</p>
+        <ul class="feature-list">
+          <li>Tap any calendar day → opens a generation panel pre-filled with that day's idea</li>
+          <li>Single "Write it" button — no extra steps required</li>
+          <li>AI generates three things in one streamed output: (1) Instagram caption, (2) WhatsApp version, (3) 12 hashtags</li>
+          <li>This replaces the "choose a platform" selector from v2 — the calendar already knows the platform</li>
+          <li>Optional: "Add a detail" field for price, deadline, offer specifics</li>
+          <li>Copy buttons per section. One-tap copy of everything together.</li>
+          <li>Tone switcher: regenerate same idea in different tone</li>
+          <li>Caption rewriter: paste existing caption → AI improves it</li>
+          <li>All generations saved automatically with timestamp and linked calendar day</li>
+        </ul>
+        <div class="info-box gold" style="margin-top:0.75rem;">
+          <div class="info-box-title">Why one output for all three</div>
+          <p>v2 asked users to choose a platform first. That's friction. The user wants to post the same content everywhere. Generate Instagram + WhatsApp + hashtags together and let them choose what to copy. Fewer taps = more usage = better retention.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- F-04 -->
+    <div class="feature-block">
+      <div class="feature-block-head">
+        <span class="feature-id">F-04</span>
+        <span class="feature-name">Subscription & Billing</span>
+        <span class="badge keep">MVP Core</span>
+        <span class="feature-est">3 days</span>
+      </div>
+      <div class="feature-body">
+        <p class="feature-story">"I want to pay easily and have my access reflect my plan."</p>
+        <ul class="feature-list">
+          <li>Paystack recurring monthly subscription</li>
+          <li>Free: 7 generations total (enough to experience one week) — no card required</li>
+          <li>Starter (₦5,000/month): 30 generations/month + full calendar</li>
+          <li>Growth (₦12,000/month): 80 generations/month + priority support</li>
+          <li>Generation counter tracked in Supabase, enforced server-side</li>
+          <li>Paystack webhook updates subscription status</li>
+          <li>Upgrade prompt appears inline — never a hard block, always a soft nudge</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-title">4.1 Phase 2 — only after 10+ paying customers ask</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Feature</th><th>Phase</th><th>Why it waits</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Standalone WhatsApp Broadcast Builder</td><td><span class="badge phase2">Phase 2</span></td><td>Deliver this through the calendar flow first. Standalone only if users need it separately.</td></tr>
+          <tr><td class="key">Bio Writer (standalone)</td><td><span class="badge phase2">Phase 2</span></td><td>Offer as a free lead-gen tool. Not a core paid feature.</td></tr>
+          <tr><td class="key">Product Description Writer</td><td><span class="badge phase2">Phase 2</span></td><td>Low recurring use. Build when fashion/food sellers explicitly request it.</td></tr>
+          <tr><td class="key">Post Scheduling</td><td><span class="badge phase2">Phase 2</span></td><td>Needs Meta API approval. Significant infra complexity. Wait for demand signal.</td></tr>
+          <tr><td class="key">Multi-business support</td><td><span class="badge phase2">Phase 2</span></td><td>Requires schema migration. Build when agencies appear in your customer base.</td></tr>
+          <tr><td class="key">Analytics dashboard</td><td><span class="badge phase2">Phase 2</span></td><td>Nice to have. Does not drive core retention loop.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 05 TECH -->
+  <section class="section" id="tech">
+    <div class="section-num">Section 05</div>
+    <h2 class="section-title">Technical Architecture</h2>
+    <div class="section-rule"></div>
+
+    <h3 class="sub-title">5.1 Stack — unchanged, still correct</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Layer</th><th>Technology</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Frontend</td><td>Next.js 14+ (App Router)</td><td>Handles server actions, streaming, routing in one framework</td></tr>
+          <tr><td class="key">Styling</td><td>Tailwind CSS</td><td>Fastest way to build a consistent UI alone</td></tr>
+          <tr><td class="key">AI</td><td>Vercel AI SDK + GPT-4o-mini</td><td>Cheapest model with good output. ~₦0.5 per generation.</td></tr>
+          <tr><td class="key">Database</td><td>Supabase (PostgreSQL)</td><td>Free tier handles first 6–12 months easily</td></tr>
+          <tr><td class="key">Auth</td><td>Supabase Auth</td><td>Built-in, zero config, handles email + Google OAuth</td></tr>
+          <tr><td class="key">Payments</td><td>Paystack</td><td>Best for Nigerian recurring billing. 1.5% per transaction.</td></tr>
+          <tr><td class="key">Hosting</td><td>Vercel</td><td>Free tier, GitHub deploy, zero ops overhead</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-title">5.2 Simplified API route — one output, all platforms</h3>
+    <p>v3 simplifies the API. Instead of a <code>contentType</code> selector, the calendar provides context and the route always generates the full package: Instagram caption + WhatsApp version + hashtags.</p>
+
+    <span class="code-label">app/api/generate/route.ts</span>
+    <pre><code>import { streamText } from 'ai'
+import { openai } from '@ai-sdk/openai'
+
+export async function POST(req: Request) {
+  const { calendarIdea, extraDetail, profile } = await req.json()
+
+  const system = `You are a professional Nigerian marketing copywriter.
+Business: ${profile.name}
+Industry: ${profile.industry}
+They sell: ${profile.whatTheySell}
+Target customer: ${profile.targetCustomer}
+Tone: ${profile.tone}
+Write in a way that feels local, relatable, and drives action.
+You understand Nigerian culture, slang, seasons, and buying behaviour.`
+
+  const prompt = `
+The business needs to post about: "${calendarIdea}"
+${extraDetail ? `Extra detail: ${extraDetail}` : ''}
+
+Write all three in one response:
+
+**INSTAGRAM CAPTION**
+[Write a compelling caption. Add relevant emojis. End with a clear CTA.]
+
+**WHATSAPP VERSION**
+[Write the same message in a more conversational, personal tone for WhatsApp broadcast. 
+No corporate language. Feels like a message from a friend who happens to run a business.]
+
+**HASHTAGS**
+[12 hashtags: mix of Nigerian location tags, niche industry tags, and broad reach tags.
+Format: #tag1 #tag2 #tag3 ...]
+`
+
+  const result = streamText({
+    model: openai('gpt-4o-mini'),
+    system,
+    prompt,
+    maxTokens: 600,
+  })
+
+  return result.toDataStreamResponse()
+}</code></pre>
+
+    <h3 class="sub-title">5.3 Minimal database schema</h3>
+    <p class="muted">Three tables only. Simpler than v2. Calendar table is the most important.</p>
+
+    <pre><code>-- auth.users managed by Supabase automatically
+
+-- Business profile (1 per user)
+create table profiles (
+  id         uuid primary key default gen_random_uuid(),
+  user_id    uuid references auth.users(id) on delete cascade unique,
+  name       text not null,
+  industry   text not null,
+  what_sells text not null,
+  target     text not null,
+  tone       text not null default 'Professional',
+  created_at timestamptz default now()
+);
+
+-- All AI generations (linked to calendar days)
+create table generations (
+  id              uuid primary key default gen_random_uuid(),
+  user_id         uuid references auth.users(id) on delete cascade,
+  calendar_day_id text,   -- references calendar.days[n].id
+  idea_prompt     text not null,
+  extra_detail    text,
+  output          text not null,
+  created_at      timestamptz default now()
+);
+
+-- Weekly calendar (one row per user per week)
+create table calendars (
+  id         uuid primary key default gen_random_uuid(),
+  user_id    uuid references auth.users(id) on delete cascade,
+  week_start date not null,
+  -- days: [{id, day, platform, idea, type, completed, generation_id}]
+  days       jsonb not null default '[]',
+  created_at timestamptz default now(),
+  unique(user_id, week_start)
+);
+
+-- Subscription state
+create table subscriptions (
+  id              uuid primary key default gen_random_uuid(),
+  user_id         uuid references auth.users(id) on delete cascade unique,
+  plan            text not null default 'free',   -- free | starter | growth
+  paystack_sub_id text,
+  status          text not null default 'active',
+  gen_count       int default 0,
+  period_start    timestamptz default now(),
+  period_end      timestamptz
+);</code></pre>
+
+    <h3 class="sub-title">5.4 API routes</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Endpoint</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td class="key">POST /api/generate</td><td>Main AI route. Streams Instagram + WhatsApp + hashtags in one output.</td></tr>
+          <tr><td class="key">GET/POST /api/profile</td><td>Fetch or save business profile.</td></tr>
+          <tr><td class="key">GET/POST /api/calendar</td><td>Get this week's calendar or generate a new one via AI.</td></tr>
+          <tr><td class="key">PATCH /api/calendar/[id]</td><td>Mark a day complete, or link a generation to a day.</td></tr>
+          <tr><td class="key">GET /api/history</td><td>Fetch user's saved generations — simple list, newest first.</td></tr>
+          <tr><td class="key">POST /api/webhooks/paystack</td><td>Update subscription status when Paystack events fire.</td></tr>
+          <tr><td class="key">GET /api/plan</td><td>Return plan + generation count for client-side gating.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 06 BUSINESS -->
+  <section class="section" id="business">
+    <div class="section-num">Section 06</div>
+    <h2 class="section-title">Honest Business Model</h2>
+    <div class="section-rule"></div>
+
+    <h3 class="sub-title">6.1 Pricing — simplified, 3 plans</h3>
+    <p class="muted">Removing the Pro plan. Most Nigerian SMEs will not pay ₦25,000/month for a solo tool. Focus on converting free → Starter.</p>
+
+    <div class="pricing-grid">
+      <div class="plan">
+        <div class="plan-head">
+          <div class="plan-name">Free</div>
+          <div class="plan-price">₦0</div>
+          <div class="plan-sub">One week trial</div>
+        </div>
+        <div class="plan-features">
+          <div class="plan-feature">7 generations total</div>
+          <div class="plan-feature">Full calendar for one week</div>
+          <div class="plan-feature">No card needed</div>
+          <div class="plan-feature">Paywall after 7 uses</div>
+        </div>
+      </div>
+      <div class="plan featured">
+        <div class="plan-head">
+          <div class="plan-name">Starter</div>
+          <div class="plan-price">₦5,000</div>
+          <div class="plan-sub">per month · most popular</div>
+        </div>
+        <div class="plan-features">
+          <div class="plan-feature">30 generations/month</div>
+          <div class="plan-feature">Weekly content calendar</div>
+          <div class="plan-feature">Instagram + WhatsApp + hashtags</div>
+          <div class="plan-feature">Full history</div>
+          <div class="plan-feature">Email support</div>
+          <div class="plan-feature">More than enough for 5× weekly posting</div>
+        </div>
+      </div>
+      <div class="plan">
+        <div class="plan-head">
+          <div class="plan-name">Growth</div>
+          <div class="plan-price">₦12,000</div>
+          <div class="plan-sub">per month</div>
+        </div>
+        <div class="plan-features">
+          <div class="plan-feature">80 generations/month</div>
+          <div class="plan-feature">Everything in Starter</div>
+          <div class="plan-feature">Priority support</div>
+          <div class="plan-feature">Early access to Phase 2 tools</div>
+          <div class="plan-feature">Best for agencies, 2+ social accounts</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box amber">
+      <div class="info-box-title">Why remove "unlimited"</div>
+      <p>30 generations/month = posting every day, twice. No Nigerian SME needs more than this in their first year. "Unlimited" is a cost centre disguised as a feature. Remove it. If heavy users hit the cap, charge them for add-on packs at ₦1,000 per 10 extra generations.</p>
+    </div>
+
+    <h3 class="sub-title">6.2 Honest revenue projections</h3>
+    <p class="muted">These reflect a solo founder with no existing audience building distribution from scratch. If you have an existing audience or pre-launch interest, multiply by 1.5–2×.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Milestone</th><th>Paying Users</th><th>Mix</th><th>Monthly Revenue</th><th>vs v2 Estimate</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Month 3 (Launch)</td><td>5–15</td><td>10 Starter, 3 Growth</td><td class="green">₦86,000</td><td class="red">v2 said ₦135,000</td></tr>
+          <tr><td class="key">Month 6</td><td>20–40</td><td>25 Starter, 10 Growth</td><td class="green">₦245,000</td><td class="red">v2 said ₦540,000</td></tr>
+          <tr><td class="key">Month 12</td><td>50–100</td><td>65 Starter, 25 Growth</td><td class="green">₦625,000</td><td class="red">v2 said ₦1,500,000</td></tr>
+          <tr><td class="key">Month 18</td><td>120–180</td><td>130 Starter, 40 Growth</td><td class="green">₦1,130,000</td><td class="red">v2 said ₦3,070,000</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-box green">
+      <div class="info-box-title">Still a real business</div>
+      <p>₦625,000/month at month 12 is a real income — especially with near-zero marginal costs. If you have an existing audience or a distribution partner (business coach, SME community), the optimistic path is possible too. These projections assume you are starting from zero.</p>
+    </div>
+
+    <h3 class="sub-title">6.3 Cost breakdown</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Cost Item</th><th>Monthly Estimate</th></tr></thead>
+        <tbody>
+          <tr><td class="key">OpenAI (GPT-4o-mini)</td><td>~₦0.50/generation. 75 users × 30 avg = ~₦1,125/month</td></tr>
+          <tr><td class="key">Vercel hosting</td><td>Free tier for a long time. Upgrade to Pro (~₦10,000/month) when needed.</td></tr>
+          <tr><td class="key">Supabase</td><td>Free tier handles this easily for 12+ months</td></tr>
+          <tr><td class="key">Paystack</td><td>1.5% per transaction, capped ₦2,000. On ₦625k = ~₦9,375/month</td></tr>
+          <tr><td class="key">Domain + misc</td><td>~₦3,000/month</td></tr>
+          <tr><td class="key">Total at ₦625k MRR</td><td class="green">~₦24,000/month costs = ₦601,000 gross profit (96% margin)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-title">6.4 The validation test — do this before building</h3>
+    <div class="answer-box">
+      <div class="answer-box-title">Can you get 10 business owners to prepay ₦2,500 today?</div>
+      <p>Not sign up. Not say "interesting." Pay — for a product that does not exist yet. If yes, build it. If nobody pays before the product exists, do not spend 6 weeks coding. Fix the pitch first. Distribution is almost always harder than building.</p>
+    </div>
+  </section>
+
+  <!-- 07 GTM -->
+  <section class="section" id="gtm">
+    <div class="section-num">Section 07</div>
+    <h2 class="section-title">Go-to-Market Strategy</h2>
+    <div class="section-rule"></div>
+
+    <h3 class="sub-title">7.1 Target segments — ranked by likelihood to pay</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Segment</th><th>Why they pay fast</th><th>How to reach them</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Instagram fashion sellers (Lagos)</td><td>Post daily, always short on ideas, comfortable paying online</td><td>Instagram DMs, fashion seller WhatsApp groups, influencer partnerships</td></tr>
+          <tr><td class="key">Food & catering businesses</td><td>WhatsApp is their main sales channel. A bad broadcast = lost revenue.</td><td>Food business Facebook groups, Abuja/Lagos food seller communities</td></tr>
+          <tr><td class="key">Hair & beauty salons</td><td>Active on Instagram. Want to look professional. Clear ROI.</td><td>Beauty industry associations, Instagram hashtags, local salon groups</td></tr>
+          <tr><td class="key">SME coaches & consultants</td><td>Need LinkedIn + Twitter content. Higher willingness to pay for tools.</td><td>LinkedIn outreach, Nigerian entrepreneur podcasts</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-title">7.2 Getting first 10 paying customers</h3>
+
+    <h4 class="minor-title">Before you write a line of code</h4>
+    <ul class="styled">
+      <li>Post on Twitter/X: "Thinking of building an AI tool that plans your weekly content and writes it for you. Would you pay ₦5,000/month for this? Nigerian business owners — reply yes or no."</li>
+      <li>DM 20 business owners you know personally. Ask: "Would you pay ₦2,500 now for early access if it was ready next month?"</li>
+      <li>Track every "yes" with their name and number. These are your first customers before you build.</li>
+    </ul>
+
+    <h4 class="minor-title">Soft launch (weeks 1–2 after build)</h4>
+    <ul class="styled">
+      <li>Give 5 beta users free access for 4 weeks. Ask for a 60-second video testimonial in return.</li>
+      <li>Post a live screen recording showing the calendar → tap → content generated in 10 seconds. No voiceover needed — the product sells itself.</li>
+      <li>Submit to TechCabal, Zikoko, BusinessDay Digital for a mention. These drive Nigerian SME attention.</li>
+    </ul>
+
+    <h4 class="minor-title">Month 2+ — building distribution</h4>
+    <ul class="styled">
+      <li>Partner with 2–3 Nigerian business coaches who have audiences. Offer 30% recurring commission on every customer they refer.</li>
+      <li>Post three times/week on Twitter: "Today's marketing tip for Nigerian business owners" — always showing Postly AI solving the problem at the end.</li>
+      <li>Run one targeted Instagram ad (₦10,000 test budget) to Lagos business owner accounts aged 25–40.</li>
+      <li>Referral incentive: one free month for every paying customer a user refers.</li>
+    </ul>
+
+    <div class="info-box gold">
+      <div class="info-box-title">The most important rule</div>
+      <p>Do not wait for the product to be perfect. Your first 5 customers come from personal relationships, not ads. Start conversations today, before you build. The product should be built alongside real users — not in isolation.</p>
+    </div>
+  </section>
+
+  <!-- 08 TIMELINE -->
+  <section class="section" id="timeline">
+    <div class="section-num">Section 08</div>
+    <h2 class="section-title">Build Timeline</h2>
+    <div class="section-rule"></div>
+    <p class="muted">5 weeks for the leaner MVP. Part-time (4 hrs/day). Full-time cuts it to 3 weeks.</p>
+
+    <div class="timeline">
+      <div class="tl-row">
+        <div class="tl-week">Week 1</div>
+        <div class="tl-build">Supabase auth, business profile form, routing, middleware</div>
+        <div class="tl-goal">User can sign up and describe their business</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-week">Week 2</div>
+        <div class="tl-build">Weekly calendar UI (grid), AI calendar planner endpoint, "Plan my week" button, Supabase persistence</div>
+        <div class="tl-goal">User sees their week planned after setup</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-week">Week 3</div>
+        <div class="tl-build">One-click generation from calendar day, streaming AI output, Instagram + WhatsApp + hashtags in one response, copy buttons, ✓ completion, history list</div>
+        <div class="tl-goal">Full core loop working — user can post every day</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-week">Week 4</div>
+        <div class="tl-build">Paystack subscription, plan limits, upgrade prompts, webhook handler, free tier counter</div>
+        <div class="tl-goal">Users can pay and upgrade</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-week">Week 5</div>
+        <div class="tl-build">Mobile responsiveness, error states, loading skeletons, landing page, onboarding polish, beta testing</div>
+        <div class="tl-goal">Ready to charge real money</div>
+      </div>
+    </div>
+
+    <div class="info-box amber">
+      <div class="info-box-title">Rule: ship at week 5, no exceptions</div>
+      <p>A working product with 3 paying customers teaches you more than 3 more months of solo building. The goal at week 5 is not a perfect product. The goal is proof that people will pay. Ship. Get feedback. Improve.</p>
+    </div>
+  </section>
+
+  <!-- 09 METRICS -->
+  <section class="section" id="metrics">
+    <div class="section-num">Section 09</div>
+    <h2 class="section-title">Success Metrics</h2>
+    <div class="section-rule"></div>
+    <p class="muted">These are the only numbers that matter. Check them every week.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Metric</th><th>Target</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr><td class="key">MRR</td><td class="gold">₦250k by month 6</td><td>The business is alive and growing</td></tr>
+          <tr><td class="key">Free → Paid conversion</td><td class="gold">15–25%</td><td>Proves the value is clear enough to pay for</td></tr>
+          <tr><td class="key">Monthly churn</td><td class="gold">Under 6%</td><td>Users are getting ongoing value, not one-time</td></tr>
+          <tr><td class="key">Calendar open rate (Mon)</td><td class="gold">60%+ of active users</td><td>The retention habit is forming — this is the leading indicator</td></tr>
+          <tr><td class="key">Generations per user / month</td><td class="gold">10+ average</td><td>High = engaged. Under 5 = at-risk of churn</td></tr>
+          <tr><td class="key">Time to first generation</td><td class="gold">Under 5 minutes after signup</td><td>If this is slow, the onboarding needs fixing immediately</td></tr>
+          <tr><td class="key">NPS</td><td class="gold">40+</td><td>The product is worth recommending</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-title">Reading the signals</h3>
+    <div class="signal-grid">
+      <div class="signal-box green">
+        <div class="signal-title">✅ Business is working</div>
+        <ul class="signal-list">
+          <li>Users open the calendar every Monday</li>
+          <li>You get referrals without asking for them</li>
+          <li>Users complain when there is downtime</li>
+          <li>People are asking for features (means they care)</li>
+          <li>Free users upgrade without a sales push</li>
+        </ul>
+      </div>
+      <div class="signal-box red">
+        <div class="signal-title">🚨 Fix these immediately</div>
+        <ul class="signal-list">
+          <li>Users sign up but never generate content</li>
+          <li>Users generate once and never return</li>
+          <li>Free trial ends and nobody upgrades</li>
+          <li>Calendar is never opened after day 1</li>
+          <li>Churn above 10% per month</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box gold" style="margin-top:1.5rem;">
+      <div class="info-box-title">The single most important metric</div>
+      <p>Calendar open rate on Monday morning. If 60%+ of your active users open the app to see their week every Monday, you have built a habit. Habits are very hard to cancel. Everything else — revenue, conversion, NPS — follows from this one number.</p>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<!-- CLOSING -->
+<div class="closing">
+  <div class="page">
+    <h2>Three features.<br><em>One habit.</em></h2>
+    <p>Business profile → weekly calendar → one-click content. That's the whole product. Build it, ship it, charge for it.</p>
+    <div class="closing-rule"></div>
+    <div class="closing-url">postlyai.com</div>
+    <div class="closing-sub">Built by Taiwo Adeyemo · atm-self.vercel.app · PRD v3.0</div>
+  </div>
+</div>
+
+<footer>
+  <span>Postly AI — PRD v3.0 — Corrected & Leaner — Confidential</span>
+  <span>© 2025 Taiwo Adeyemo</span>
+</footer>
+
+</body>
+</html>
