@@ -2,7 +2,10 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
 export async function createClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+  const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const url = rawUrl && (rawUrl.startsWith('http://') || rawUrl.startsWith('https://'))
+    ? rawUrl
+    : 'https://placeholder.supabase.co'
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
   const cookieStore = await cookies()
 
