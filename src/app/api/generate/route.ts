@@ -17,13 +17,24 @@ export async function POST(req: NextRequest) {
       return new Response('businessDescription required', { status: 400 })
     }
 
-    const result = streamText({
-      model: openai('gpt-4o-mini'),
-      prompt: buildSamplePlanPrompt(businessDescription),
-      maxOutputTokens: 600,
-    })
+    const isPlaceholder = !process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_openai_api_key'
 
-    return result.toTextStreamResponse()
+    if (isPlaceholder) {
+      return new Response(getMockPlan(businessDescription))
+    }
+
+    try {
+      const result = streamText({
+        model: openai('gpt-4o-mini'),
+        prompt: buildSamplePlanPrompt(businessDescription),
+        maxOutputTokens: 600,
+      })
+
+      return result.toTextStreamResponse()
+    } catch (err) {
+      console.warn('OpenAI stream failed, falling back to mock:', err)
+      return new Response(getMockPlan(businessDescription))
+    }
   }
 
   // ── AUTHENTICATED MODES ──
@@ -101,4 +112,87 @@ export async function POST(req: NextRequest) {
   }
 
   return new Response('Invalid mode', { status: 400 })
+}
+
+function getMockPlan(desc: string): string {
+  const lowercaseDesc = desc.toLowerCase()
+  
+  if (lowercaseDesc.includes('wig') || lowercaseDesc.includes('hair') || lowercaseDesc.includes('braid') || lowercaseDesc.includes('beauty')) {
+    return `DAY: Monday
+PLATFORM: Instagram
+TYPE: Product showcase
+IDEA: Show the bounce and shine! Post a high-definition Reel showing our best-selling luxury wigs under natural sunlight to capture the texture and lace blend.
+---
+DAY: Tuesday
+PLATFORM: WhatsApp
+TYPE: Promo
+IDEA: Send a personalized broadcast offering an exclusive 10% discount on our wig styling and laundry packages to returning clients this week.
+---
+DAY: Wednesday
+PLATFORM: Instagram
+TYPE: Behind the scenes
+IDEA: Take them behind the mirror. Capture a quick step-by-step styling video of custom knot-bleaching and hair plucking to show the work behind every lace.
+---
+DAY: Thursday
+PLATFORM: WhatsApp
+TYPE: Engagement
+IDEA: Share a poll asking your WhatsApp status audience to vote for their preferred hair length: "Bob or 30 inches?" to trigger direct message interaction.
+---
+DAY: Friday
+PLATFORM: Instagram
+TYPE: Campaign
+IDEA: OWAMBE READY! Share a carousel of stunning transformations and reviews from clients wearing our wigs to owambes last weekend as strong social proof.`
+  }
+
+  if (lowercaseDesc.includes('food') || lowercaseDesc.includes('catering') || lowercaseDesc.includes('cake') || lowercaseDesc.includes('restaurant') || lowercaseDesc.includes('kitchen')) {
+    return `DAY: Monday
+PLATFORM: Instagram
+TYPE: Product showcase
+IDEA: Post a mouth-watering close-up video of our signature dish (e.g., smoky jollof rice or gourmet cake slice) to trigger cravings right at lunch hour.
+---
+DAY: Tuesday
+PLATFORM: WhatsApp
+TYPE: Promo
+IDEA: Send a WhatsApp broadcast showcasing our "Mid-Week Lunch Pack Combo" deal. Offer free delivery to the first 10 offices or families that order.
+---
+DAY: Wednesday
+PLATFORM: Instagram
+TYPE: Behind the scenes
+IDEA: Capture a quick behind-the-scenes video in the kitchen focusing on the fresh, high-quality ingredients and hygienic prep methods to build consumer trust.
+---
+DAY: Thursday
+PLATFORM: WhatsApp
+TYPE: Engagement
+IDEA: Post a graphic on WhatsApp Status asking: "Jollof or Fried Rice? Pick your team in the replies!" to trigger DMs and conversation.
+---
+DAY: Friday
+PLATFORM: Instagram
+TYPE: Campaign
+IDEA: Owambe & Weekend Vibes! Showcase your custom party catering setups or birthday cake designs ready for delivery, along with text reviews from previous celebrations.`
+  }
+
+  return `DAY: Monday
+PLATFORM: Instagram
+TYPE: Product showcase
+IDEA: Showcase our new arrivals! Share a beautiful carousel post detailing the key features, unique textures, and details of our premium product collection.
+---
+DAY: Tuesday
+PLATFORM: WhatsApp
+TYPE: Promo
+IDEA: Broadcast a mid-week flash sale. Give your loyal WhatsApp customers a 24-hour priority access code to get 15% off before we launch to the public.
+---
+DAY: Wednesday
+PLATFORM: Instagram
+TYPE: Behind the scenes
+IDEA: Share a speed-wrap packaging Reel. Show the care, beautiful packaging cards, and small gifts we add to every single order we ship out today.
+---
+DAY: Thursday
+PLATFORM: WhatsApp
+TYPE: Engagement
+IDEA: Share a testimonial screenshot on your WhatsApp Status and ask your audience: "What product should we stock next? Tell us in the DMs!"
+---
+DAY: Friday
+PLATFORM: Instagram
+TYPE: Campaign
+IDEA: Highlight our premium delivery speeds! Share customer unboxing clips and positive reviews demonstrating our reliable, top-tier service.`
 }
