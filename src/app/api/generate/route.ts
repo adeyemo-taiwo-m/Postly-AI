@@ -87,13 +87,26 @@ export async function POST(req: NextRequest) {
 
   // ── PLAN GENERATION ──
   if (mode === 'plan') {
-    const result = streamText({
-      model: openai('gpt-4o-mini'),
-      system: buildSystemPrompt(profile),
-      prompt: buildPlanPrompt(profile),
-      maxOutputTokens: 900,
-    })
-    return result.toTextStreamResponse()
+    const isPlaceholder = !process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_openai_api_key'
+
+    if (isPlaceholder) {
+      const description = `${profile?.industry} - ${profile?.what_sells}`
+      return new Response(getMockPlan(description))
+    }
+
+    try {
+      const result = streamText({
+        model: openai('gpt-4o-mini'),
+        system: buildSystemPrompt(profile),
+        prompt: buildPlanPrompt(profile),
+        maxOutputTokens: 900,
+      })
+      return result.toTextStreamResponse()
+    } catch (err) {
+      console.warn('OpenAI plan stream failed, falling back to mock:', err)
+      const description = `${profile?.industry} - ${profile?.what_sells}`
+      return new Response(getMockPlan(description))
+    }
   }
 
   // ── CONTENT GENERATION ──
@@ -102,16 +115,57 @@ export async function POST(req: NextRequest) {
       return new Response('calendarIdea required', { status: 400 })
     }
 
-    const result = streamText({
-      model: openai('gpt-4o-mini'),
-      system: buildSystemPrompt(profile),
-      prompt: buildContentPrompt(calendarIdea, extraDetail),
-      maxOutputTokens: 700,
-    })
-    return result.toTextStreamResponse()
+    const isPlaceholder = !process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_openai_api_key'
+
+    if (isPlaceholder) {
+      return new Response(getMockContent(calendarIdea, extraDetail, profile))
+    }
+
+    try {
+      const result = streamText({
+        model: openai('gpt-4o-mini'),
+        system: buildSystemPrompt(profile),
+        prompt: buildContentPrompt(calendarIdea, extraDetail),
+        maxOutputTokens: 700,
+      })
+      return result.toTextStreamResponse()
+    } catch (err) {
+      console.warn('OpenAI content stream failed, falling back to mock:', err)
+      return new Response(getMockContent(calendarIdea, extraDetail, profile))
+    }
   }
 
   return new Response('Invalid mode', { status: 400 })
+}
+
+function getMockContent(calendarIdea: string, extraDetail?: string, profile?: any): string {
+  const businessName = profile?.name || 'our brand'
+  const sells = profile?.what_sells || 'our premium items'
+  const industry = profile?.industry || 'retail'
+  const extra = extraDetail ? `\n\nNote: ${extraDetail}` : ''
+
+  return `**INSTAGRAM CAPTION**
+✨ Happy new week, family! If you want to elevate your style and stand out, ${businessName} has exactly what you need. 
+
+Our premium, hand-picked ${sells} are crafted just for you. Whether you're dressing up for a major Owambe this weekend or keeping it sleek and professional for business meetings, we've got you covered. No stories, just pure quality! 💯
+
+👉 ${calendarIdea}${extra}
+
+DM us right now to place your order or ask questions. We reply in seconds! Let's get you looking fly today. 🛍️✈️
+
+**WHATSAPP VERSION**
+Compliments of the season! 🌟 
+
+Just wanted to personally share this week's special spotlight with you. We know you love quality, and we just brought in new stock of our premium ${sells}! 
+
+Whether you need something custom or ready-to-wear, we are active and taking orders. 
+
+👉 "${calendarIdea}"
+
+Drop us a message right here to book yours before we post on Instagram. Fast delivery nationwide! 🚚💨
+
+**HASHTAGS**
+#LagosSMEs #AbujaBusiness #LagosStyle #NigerianFashion #NaijaSME #ShopLocalNigeria #BuyNigerian #PremiumQuality #OwambeVibes #NaijaBrand #ExplorePage #PostlyAI`
 }
 
 function getMockPlan(desc: string): string {
