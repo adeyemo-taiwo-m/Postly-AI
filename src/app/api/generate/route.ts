@@ -1,5 +1,5 @@
 import { streamText } from 'ai'
-import { openai } from '@ai-sdk/openai'
+import { google } from '@ai-sdk/google'
 import { createClient } from '@/lib/supabase/server'
 import { buildSystemPrompt, buildPlanPrompt, buildContentPrompt, buildSamplePlanPrompt } from '@/lib/ai/prompts'
 import { PLAN_LIMITS } from '@/types'
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       return new Response('businessDescription required', { status: 400 })
     }
 
-    const isPlaceholder = !process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_openai_api_key'
+    const isPlaceholder = !process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_gemini_api_key'
 
     if (isPlaceholder) {
       return new Response(getMockPlan(businessDescription))
@@ -25,14 +25,14 @@ export async function POST(req: NextRequest) {
 
     try {
       const result = streamText({
-        model: openai('gpt-4o-mini'),
+        model: google('gemini-1.5-flash'),
         prompt: buildSamplePlanPrompt(businessDescription),
         maxOutputTokens: 600,
       })
 
       return result.toTextStreamResponse()
     } catch (err) {
-      console.warn('OpenAI stream failed, falling back to mock:', err)
+      console.warn('Gemini stream failed, falling back to mock:', err)
       return new Response(getMockPlan(businessDescription))
     }
   }
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
 
   // ── PLAN GENERATION ──
   if (mode === 'plan') {
-    const isPlaceholder = !process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_openai_api_key'
+    const isPlaceholder = !process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_gemini_api_key'
 
     if (isPlaceholder) {
       const description = `${profile?.industry} - ${profile?.what_sells}`
@@ -96,14 +96,14 @@ export async function POST(req: NextRequest) {
 
     try {
       const result = streamText({
-        model: openai('gpt-4o-mini'),
+        model: google('gemini-1.5-flash'),
         system: buildSystemPrompt(profile),
         prompt: buildPlanPrompt(profile),
         maxOutputTokens: 900,
       })
       return result.toTextStreamResponse()
     } catch (err) {
-      console.warn('OpenAI plan stream failed, falling back to mock:', err)
+      console.warn('Gemini plan stream failed, falling back to mock:', err)
       const description = `${profile?.industry} - ${profile?.what_sells}`
       return new Response(getMockPlan(description))
     }
@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
       return new Response('calendarIdea required', { status: 400 })
     }
 
-    const isPlaceholder = !process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_openai_api_key'
+    const isPlaceholder = !process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_gemini_api_key'
 
     if (isPlaceholder) {
       return new Response(getMockContent(calendarIdea, extraDetail, profile))
@@ -123,14 +123,14 @@ export async function POST(req: NextRequest) {
 
     try {
       const result = streamText({
-        model: openai('gpt-4o-mini'),
+        model: google('gemini-1.5-flash'),
         system: buildSystemPrompt(profile),
         prompt: buildContentPrompt(calendarIdea, extraDetail),
         maxOutputTokens: 700,
       })
       return result.toTextStreamResponse()
     } catch (err) {
-      console.warn('OpenAI content stream failed, falling back to mock:', err)
+      console.warn('Gemini content stream failed, falling back to mock:', err)
       return new Response(getMockContent(calendarIdea, extraDetail, profile))
     }
   }
