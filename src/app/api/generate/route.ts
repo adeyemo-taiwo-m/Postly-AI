@@ -11,13 +11,16 @@ export async function POST(req: NextRequest) {
   const body = await req.json()
   const { mode, calendarIdea, extraDetail, businessDescription } = body
 
+  const geminiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY
+  const isPlaceholder = !geminiKey || geminiKey === 'your_gemini_api_key' || geminiKey === 'your_google_generative_ai_api_key'
+
   // ── DEMO MODE: no auth required, used on landing page ──
   if (mode === 'demo') {
     if (!businessDescription) {
       return new Response('businessDescription required', { status: 400 })
     }
 
-    const isPlaceholder = !process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_gemini_api_key'
+
 
     if (isPlaceholder) {
       return new Response(getMockPlan(businessDescription))
@@ -87,7 +90,7 @@ export async function POST(req: NextRequest) {
 
   // ── PLAN GENERATION ──
   if (mode === 'plan') {
-    const isPlaceholder = !process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_gemini_api_key'
+
 
     if (isPlaceholder) {
       const description = `${profile?.industry} - ${profile?.what_sells}`
@@ -115,7 +118,7 @@ export async function POST(req: NextRequest) {
       return new Response('calendarIdea required', { status: 400 })
     }
 
-    const isPlaceholder = !process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_gemini_api_key'
+
 
     if (isPlaceholder) {
       return new Response(getMockContent(calendarIdea, extraDetail, profile))
