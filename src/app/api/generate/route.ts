@@ -20,10 +20,10 @@ export async function POST(req: NextRequest) {
     const result = streamText({
       model: openai('gpt-4o-mini'),
       prompt: buildSamplePlanPrompt(businessDescription),
-      maxTokens: 600,
+      maxOutputTokens: 600,
     })
 
-    return result.toDataStreamResponse()
+    return result.toTextStreamResponse()
   }
 
   // ── AUTHENTICATED MODES ──
@@ -80,9 +80,9 @@ export async function POST(req: NextRequest) {
       model: openai('gpt-4o-mini'),
       system: buildSystemPrompt(profile),
       prompt: buildPlanPrompt(profile),
-      maxTokens: 900,
+      maxOutputTokens: 900,
     })
-    return result.toDataStreamResponse()
+    return result.toTextStreamResponse()
   }
 
   // ── CONTENT GENERATION ──
@@ -95,9 +95,9 @@ export async function POST(req: NextRequest) {
       model: openai('gpt-4o-mini'),
       system: buildSystemPrompt(profile),
       prompt: buildContentPrompt(calendarIdea, extraDetail),
-      maxTokens: 700,
+      maxOutputTokens: 700,
     })
-    return result.toDataStreamResponse()
+    return result.toTextStreamResponse()
   }
 
   return new Response('Invalid mode', { status: 400 })

@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState, Suspense } from 'react'
-import { useCompletion } from 'ai/react'
+import { useCompletion } from '@ai-sdk/react'
 import { PlanItem, Plan } from '@/types'
 import { parsePlanFromText } from '@/lib/utils'
 import { useRouter, useSearchParams } from 'next/navigation'

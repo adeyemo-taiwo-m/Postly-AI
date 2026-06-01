@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, Suspense } from 'react'
-import { useCompletion } from 'ai/react'
+import { useCompletion } from '@ai-sdk/react'
 import { useParams, useSearchParams, useRouter } from 'next/navigation'
 
 function GenerateContent() {
